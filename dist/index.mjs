@@ -24,14 +24,32 @@ function $c3f6c693698dc7cd$var$setPassword(newPassword) {
     $c3f6c693698dc7cd$var$password = newPassword;
     $c3f6c693698dc7cd$var$resetRPC();
 }
-function $c3f6c693698dc7cd$var$getAddressDeltas(addresses) {
+function $c3f6c693698dc7cd$var$turnIntoStringArray(str) {
+    if (typeof str === "string") return [
+        str
+    ];
+    return str;
+}
+function $c3f6c693698dc7cd$var$getAddressMempool(address) {
+    const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address); //Support both string and string array
+    const includeAssets = true;
+    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressmempool, [
+        {
+            addresses: addresses
+        },
+        includeAssets
+    ]);
+}
+function $c3f6c693698dc7cd$var$getAddressDeltas(address) {
+    const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
     return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressdeltas, [
         {
             addresses: addresses
         }
     ]);
 }
-function $c3f6c693698dc7cd$var$getAssetBalance(addresses) {
+function $c3f6c693698dc7cd$var$getAssetBalance(address) {
+    const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray;
     const includeAssets = true;
     return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressbalance, [
         {
@@ -77,6 +95,7 @@ function $c3f6c693698dc7cd$var$getRavencoinBalance(addresses) {
 }
 var $c3f6c693698dc7cd$export$2e2bcd8739ae039 = {
     getAddressDeltas: $c3f6c693698dc7cd$var$getAddressDeltas,
+    getAddressMempool: $c3f6c693698dc7cd$var$getAddressMempool,
     getAllAssets: $c3f6c693698dc7cd$var$getAllAssets,
     getAsset: $c3f6c693698dc7cd$var$getAsset,
     getAssetBalance: $c3f6c693698dc7cd$var$getAssetBalance,

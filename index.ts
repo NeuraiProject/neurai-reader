@@ -27,10 +27,26 @@ function setPassword(newPassword: string) {
   password = newPassword;
   resetRPC();
 }
-function getAddressDeltas(addresses: Array<string>): Promise < any[] > {
+
+function turnIntoStringArray(str: string | string[]): string[] {
+  if (typeof str === "string") {
+    return [str];
+  }
+  return str;
+}
+function getAddressMempool(address: string | string[]): Promise<any> {
+  const addresses = turnIntoStringArray(address); //Support both string and string array
+
+  const includeAssets = true;
+  return rpc(methods.getaddressmempool, [{ addresses: addresses }, includeAssets]);
+}
+function getAddressDeltas(address: string | string[]): Promise<any[]> {
+  const addresses = turnIntoStringArray(address);
+
   return rpc(methods.getaddressdeltas, [{ addresses: addresses }]);
 }
-function getAssetBalance(addresses: Array<string>): Promise<any> {
+function getAssetBalance(address: string | string[]): Promise<any> {
+  const addresses = turnIntoStringArray;
   const includeAssets = true;
   return rpc(methods.getaddressbalance, [
     { addresses: addresses },
@@ -69,6 +85,7 @@ function getRavencoinBalance(addresses: Array<string>) {
 }
 export default {
   getAddressDeltas,
+  getAddressMempool,
   getAllAssets,
   getAsset,
   getAssetBalance,

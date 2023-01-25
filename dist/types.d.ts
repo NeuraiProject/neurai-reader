@@ -1,8 +1,9 @@
 declare function setURL(newURL: string): void;
 declare function setUsername(newUsername: string): void;
 declare function setPassword(newPassword: string): void;
-declare function getAddressDeltas(addresses: Array<string>): Promise<any[]>;
-declare function getAssetBalance(addresses: Array<string>): Promise<any>;
+declare function getAddressMempool(address: string | string[]): Promise<any>;
+declare function getAddressDeltas(address: string | string[]): Promise<any[]>;
+declare function getAssetBalance(address: string | string[]): Promise<any>;
 declare function getAsset(name: string): Promise<any>;
 declare function getAllAssets(prefix?: string, includeAllMetaData?: boolean): Promise<any>;
 declare function getMempool(): Promise<any>;
@@ -10,6 +11,7 @@ declare function verifyMessage(address: string, signature: string, message: stri
 declare function getRavencoinBalance(addresses: Array<string>): {};
 declare const _default: {
     getAddressDeltas: typeof getAddressDeltas;
+    getAddressMempool: typeof getAddressMempool;
     getAllAssets: typeof getAllAssets;
     getAsset: typeof getAsset;
     getAssetBalance: typeof getAssetBalance;
