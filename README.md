@@ -15,15 +15,17 @@ npm install github:ravenrebels/ravencoin-reader
 
 Now create a file called `index.mjs` the extension .mjs to use ECMA Module (ECMAScript Module) in Node. js applications.
 
-Now run your script
-```
-node index.mjs
-```
 Add content to index.mjs
 ```
 import Reader from "@ravenrebels/ravencoin-reader";
 
 Reader.getAsset("FREN#RED").then(console.table);
+```
+
+
+Now run your script
+```
+node index.mjs
 ```
 
 Expected output
