@@ -43,6 +43,12 @@ declare function getAsset(name: string): Promise<any>;
 declare function getAllAssets(prefix?: string, includeAllMetaData?: boolean): Promise<any>;
 declare function getMempool(): Promise<any>;
 declare function verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
+declare function getTransaction(id: string): Promise<any>;
 declare function getRavencoinBalance(addresses: Array<string>): {};
+
+declare function setURL(newURL: string): void;
+declare function setUsername(newUsername: string): void;
+declare function setPassword(newPassword: string): void;
+
 ```
 
