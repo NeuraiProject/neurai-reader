@@ -34,7 +34,9 @@ Expected output
 
 # API (more to come)
 ```
-declare function getAssetBalance(addresses: Array<string>): Promise<any>;
+declare function getAddressMempool(address: string | string[]): Promise<any>;
+declare function getAddressDeltas(address: string | string[]): Promise<any[]>;
+declare function getAssetBalance(address: string | string[]): Promise<any>;
 declare function getAsset(name: string): Promise<any>;
 declare function getAllAssets(prefix?: string, includeAllMetaData?: boolean): Promise<any>;
 declare function getMempool(): Promise<any>;
