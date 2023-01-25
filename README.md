@@ -13,7 +13,7 @@ npm init -y
 npm install github:ravenrebels/ravencoin-reader
 ```
 
-Now create a file called `index.mjs` the extension .mjs to use ECMA Module (ECMAScript Module) in Node. js applications.
+Now create a file called `index.mjs` the extension .mjs tells Node.js to support ECMA Module (ECMAScript Module).
 
 Add content to index.mjs
 ```
