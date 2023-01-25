@@ -38,7 +38,10 @@ function getAddressMempool(address: string | string[]): Promise<any> {
   const addresses = turnIntoStringArray(address); //Support both string and string array
 
   const includeAssets = true;
-  return rpc(methods.getaddressmempool, [{ addresses: addresses }, includeAssets]);
+  return rpc(methods.getaddressmempool, [
+    { addresses: addresses },
+    includeAssets,
+  ]);
 }
 function getAddressDeltas(address: string | string[]): Promise<any[]> {
   const addresses = turnIntoStringArray(address);
@@ -75,6 +78,11 @@ function verifyMessage(
   const params = [address, signature, message];
   return rpc(methods.verifymessage, params);
 }
+
+function getTransaction(id: string): Promise<any> {
+  const verbose = true;
+  return rpc(methods.getrawtransaction, [id, verbose]);
+}
 function getRavencoinBalance(addresses: Array<string>) {
   if (!addresses || addresses.length < 1) {
     return {};
@@ -91,7 +99,7 @@ export default {
   getAssetBalance,
   getMempool,
   getRavencoinBalance,
-
+  getTransaction,
   setUsername,
   setPassword,
   setURL,

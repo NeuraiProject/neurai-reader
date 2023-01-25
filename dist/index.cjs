@@ -92,6 +92,13 @@ function $80bd448eb6ea085b$var$verifyMessage(address, signature, message) {
     ];
     return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).verifymessage, params);
 }
+function $80bd448eb6ea085b$var$getTransaction(id) {
+    const verbose = true;
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getrawtransaction, [
+        id,
+        verbose
+    ]);
+}
 function $80bd448eb6ea085b$var$getRavencoinBalance(addresses) {
     if (!addresses || addresses.length < 1) return {};
     const includeAssets = false;
@@ -111,6 +118,7 @@ var $80bd448eb6ea085b$export$2e2bcd8739ae039 = {
     getAssetBalance: $80bd448eb6ea085b$var$getAssetBalance,
     getMempool: $80bd448eb6ea085b$var$getMempool,
     getRavencoinBalance: $80bd448eb6ea085b$var$getRavencoinBalance,
+    getTransaction: $80bd448eb6ea085b$var$getTransaction,
     setUsername: $80bd448eb6ea085b$var$setUsername,
     setPassword: $80bd448eb6ea085b$var$setPassword,
     setURL: $80bd448eb6ea085b$var$setURL,

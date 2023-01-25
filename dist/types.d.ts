@@ -8,6 +8,7 @@ declare function getAsset(name: string): Promise<any>;
 declare function getAllAssets(prefix?: string, includeAllMetaData?: boolean): Promise<any>;
 declare function getMempool(): Promise<any>;
 declare function verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
+declare function getTransaction(id: string): Promise<any>;
 declare function getRavencoinBalance(addresses: Array<string>): {};
 declare const _default: {
     getAddressDeltas: typeof getAddressDeltas;
@@ -17,6 +18,7 @@ declare const _default: {
     getAssetBalance: typeof getAssetBalance;
     getMempool: typeof getMempool;
     getRavencoinBalance: typeof getRavencoinBalance;
+    getTransaction: typeof getTransaction;
     setUsername: typeof setUsername;
     setPassword: typeof setPassword;
     setURL: typeof setURL;

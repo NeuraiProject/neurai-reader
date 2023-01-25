@@ -82,6 +82,13 @@ function $c3f6c693698dc7cd$var$verifyMessage(address, signature, message) {
     ];
     return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).verifymessage, params);
 }
+function $c3f6c693698dc7cd$var$getTransaction(id) {
+    const verbose = true;
+    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getrawtransaction, [
+        id,
+        verbose
+    ]);
+}
 function $c3f6c693698dc7cd$var$getRavencoinBalance(addresses) {
     if (!addresses || addresses.length < 1) return {};
     const includeAssets = false;
@@ -101,6 +108,7 @@ var $c3f6c693698dc7cd$export$2e2bcd8739ae039 = {
     getAssetBalance: $c3f6c693698dc7cd$var$getAssetBalance,
     getMempool: $c3f6c693698dc7cd$var$getMempool,
     getRavencoinBalance: $c3f6c693698dc7cd$var$getRavencoinBalance,
+    getTransaction: $c3f6c693698dc7cd$var$getTransaction,
     setUsername: $c3f6c693698dc7cd$var$setUsername,
     setPassword: $c3f6c693698dc7cd$var$setPassword,
     setURL: $c3f6c693698dc7cd$var$setURL,
