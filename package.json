@@ -1,0 +1,32 @@
+{
+  "name": "@ravenrebels/ravencoin-reader",
+  "version": "0.0.1",
+  "description": "Read information from Ravencoin blockchain",
+  "source":"index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs"
+  },
+  "scripts": {
+    "build": "parcel build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ravenrebels/ravencoin-reader.git"
+  },
+  "keywords": [],
+  "author": "Raven Rebels - Dick Henrik Larsson",
+  "license": "MIT",
+  "dependencies": {
+    "@ravenrebels/ravencoin-rpc": "^0.2.4"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.3"
+  },
+  "bugs": {
+    "url": "https://github.com/ravenrebels/ravencoin-reader/issues"
+  },
+  "homepage": "https://github.com/ravenrebels/ravencoin-reader#readme"
+}
