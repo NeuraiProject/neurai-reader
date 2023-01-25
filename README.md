@@ -34,7 +34,7 @@ Expected output
 
 ![image](https://user-images.githubusercontent.com/9694984/214542343-c842ca90-e0bd-4d25-9983-34d3fbf57ace.png)
 
-# API (more to come)
+# API (more are added every day)
 ```
 declare function getAddressMempool(address: string | string[]): Promise<any>;
 declare function getAddressDeltas(address: string | string[]): Promise<any[]>;
