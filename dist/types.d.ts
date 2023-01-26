@@ -15,6 +15,8 @@ declare function getAddressMempool(address: string | string[]): Promise<any>;
 declare function getAllAssets(prefix?: string, includeAllMetaData?: boolean): Promise<any>;
 declare function getAssetBalance(address: string | string[]): Promise<any>;
 declare function getAsset(name: string): Promise<any>;
+declare function getBestBlockHash(): Promise<string>;
+declare function getBlockByHeight(height: number): Promise<any>;
 declare function getMempool(): Promise<any>;
 declare function getRavencoinBalance(addresses: Array<string>): {};
 declare function getTransaction(id: string): Promise<any>;
@@ -26,6 +28,8 @@ declare const _default: {
     getAllAssets: typeof getAllAssets;
     getAsset: typeof getAsset;
     getAssetBalance: typeof getAssetBalance;
+    getBestBlockHash: typeof getBestBlockHash;
+    getBlockByHeight: typeof getBlockByHeight;
     getMempool: typeof getMempool;
     getRavencoinBalance: typeof getRavencoinBalance;
     getTransaction: typeof getTransaction;
