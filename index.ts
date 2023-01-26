@@ -110,7 +110,8 @@ function getMempool() {
   return rpc(methods.getrawmempool, [true]);
 }
 
-function getRavencoinBalance(addresses: Array<string>) {
+function getRavencoinBalance(address: string | string[]) {
+  const addresses = turnIntoStringArray(address);
   if (!addresses || addresses.length < 1) {
     return {};
   }

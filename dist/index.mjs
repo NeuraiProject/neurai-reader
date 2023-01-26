@@ -107,7 +107,8 @@ function $c3f6c693698dc7cd$var$getMempool() {
         true
     ]);
 }
-function $c3f6c693698dc7cd$var$getRavencoinBalance(addresses) {
+function $c3f6c693698dc7cd$var$getRavencoinBalance(address) {
+    const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
     if (!addresses || addresses.length < 1) return {};
     const includeAssets = false;
     const params = [
