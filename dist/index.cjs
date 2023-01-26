@@ -95,6 +95,11 @@ function $80bd448eb6ea085b$var$getAsset(name) {
 function $80bd448eb6ea085b$var$getBestBlockHash() {
     return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getbestblockhash, []);
 }
+function $80bd448eb6ea085b$var$getBlockByHash(hash) {
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getblock, [
+        hash
+    ]);
+}
 function $80bd448eb6ea085b$var$getBlockByHeight(height) {
     return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getblockhash, [
         height
@@ -152,6 +157,7 @@ var $80bd448eb6ea085b$export$2e2bcd8739ae039 = {
     getAsset: $80bd448eb6ea085b$var$getAsset,
     getAssetBalance: $80bd448eb6ea085b$var$getAssetBalance,
     getBestBlockHash: $80bd448eb6ea085b$var$getBestBlockHash,
+    getBlockByHash: $80bd448eb6ea085b$var$getBlockByHash,
     getBlockByHeight: $80bd448eb6ea085b$var$getBlockByHeight,
     getMempool: $80bd448eb6ea085b$var$getMempool,
     getRavencoinBalance: $80bd448eb6ea085b$var$getRavencoinBalance,

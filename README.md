@@ -44,6 +44,7 @@ declare function getAllAssets(prefix?: string, includeAllMetaData?: boolean): Pr
 declare function getAssetBalance(address: string | string[]): Promise<any>;
 declare function getAsset(name: string): Promise<any>;
 declare function getBestBlockHash(): Promise<string>;
+declare function getBlockByHash(hash: string): Promise<any>;
 declare function getBlockByHeight(height: number): Promise<any>;
 declare function getMempool(): Promise<any>;
 declare function getRavencoinBalance(addresses: Array<string>): {};

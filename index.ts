@@ -92,10 +92,14 @@ function getAssetBalance(address: string | string[]): Promise<any> {
 function getAsset(name: string): Promise<any> {
   return rpc(methods.getassetdata, [name]);
 }
- function getBestBlockHash(): Promise<string> {
+function getBestBlockHash(): Promise<string> {
   return rpc(methods.getbestblockhash, []);
 }
- function getBlockByHeight(height: number): Promise<any> {
+
+function getBlockByHash(hash: string): Promise<any> {
+  return rpc(methods.getblock, [hash]);
+}
+function getBlockByHeight(height: number): Promise<any> {
   return rpc(methods.getblockhash, [height]).then((hash) => {
     const verbosity = 3; //include transactions
     const block = rpc(methods.getblock, [hash, verbosity]);
@@ -144,6 +148,7 @@ export default {
   getAsset,
   getAssetBalance,
   getBestBlockHash,
+  getBlockByHash,
   getBlockByHeight,
   getMempool,
   getRavencoinBalance,
