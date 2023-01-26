@@ -36,15 +36,16 @@ Expected output
 
 # API (more are added every day)
 ```
-declare function getAddressMempool(address: string | string[]): Promise<any>;
+declare function getAddressesByAsset(assetName: string, onlytotal?: boolean, count?: boolean, start?: boolean): Promise<any>;
 declare function getAddressDeltas(address: string | string[]): Promise<any[]>;
+declare function getAddressMempool(address: string | string[]): Promise<any>;
+declare function getAllAssets(prefix?: string, includeAllMetaData?: boolean): Promise<any>;
 declare function getAssetBalance(address: string | string[]): Promise<any>;
 declare function getAsset(name: string): Promise<any>;
-declare function getAllAssets(prefix?: string, includeAllMetaData?: boolean): Promise<any>;
 declare function getMempool(): Promise<any>;
-declare function verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
-declare function getTransaction(id: string): Promise<any>;
 declare function getRavencoinBalance(addresses: Array<string>): {};
+declare function getTransaction(id: string): Promise<any>;
+declare function verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
 
 declare function setURL(newURL: string): void;
 declare function setUsername(newUsername: string): void;

@@ -28,12 +28,41 @@ function setPassword(newPassword: string) {
   resetRPC();
 }
 
-function turnIntoStringArray(str: string | string[]): string[] {
-  if (typeof str === "string") {
-    return [str];
+/**
+  * 
+  * @param assetName mandatory
+  * @param onlytotal otional, when false result is just a list of addresses with balances -- when true the result is just a single number representing the number of addresses
+  * @param count (integer, optional, default=50000, MAX=50000) truncates results to include only the first _count_ assets found
+  * @param start (integer, optional, default=0) results skip over the first _start_ assets found (if negative it skips back from the end)
+  
+  */
+function getAddressesByAsset(
+  assetName: string,
+  onlytotal?: boolean,
+  count?: boolean,
+  start?: boolean
+): Promise<any> {
+  const _onlytotal = onlytotal === undefined ? false : onlytotal;
+  let _count = count === undefined ? 5000 : count;
+  let _start = start === undefined ? 0 : start;
+  if (_count > 50000) {
+    _count = 50000;
   }
-  return str;
+
+  return rpc(methods.listaddressesbyasset, [
+    assetName,
+    _onlytotal,
+    _count,
+    _start,
+  ]);
 }
+
+function getAddressDeltas(address: string | string[]): Promise<any[]> {
+  const addresses = turnIntoStringArray(address);
+
+  return rpc(methods.getaddressdeltas, [{ addresses: addresses }]);
+}
+
 function getAddressMempool(address: string | string[]): Promise<any> {
   const addresses = turnIntoStringArray(address); //Support both string and string array
 
@@ -43,11 +72,14 @@ function getAddressMempool(address: string | string[]): Promise<any> {
     includeAssets,
   ]);
 }
-function getAddressDeltas(address: string | string[]): Promise<any[]> {
-  const addresses = turnIntoStringArray(address);
 
-  return rpc(methods.getaddressdeltas, [{ addresses: addresses }]);
+function getAllAssets(
+  prefix: string = "*",
+  includeAllMetaData: boolean = false
+): Promise<any> {
+  return rpc(methods.listassets, [prefix, includeAllMetaData]);
 }
+
 function getAssetBalance(address: string | string[]): Promise<any> {
   const addresses = turnIntoStringArray;
   const includeAssets = true;
@@ -60,14 +92,23 @@ function getAssetBalance(address: string | string[]): Promise<any> {
 function getAsset(name: string): Promise<any> {
   return rpc(methods.getassetdata, [name]);
 }
-function getAllAssets(
-  prefix: string = "*",
-  includeAllMetaData: boolean = false
-): Promise<any> {
-  return rpc(methods.listassets, [prefix, includeAllMetaData]);
-}
+
 function getMempool() {
   return rpc(methods.getrawmempool, [true]);
+}
+
+function getRavencoinBalance(addresses: Array<string>) {
+  if (!addresses || addresses.length < 1) {
+    return {};
+  }
+  const includeAssets = false;
+  const params = [{ addresses: addresses }, includeAssets];
+  return rpc(methods.getaddressbalance, params);
+}
+
+function getTransaction(id: string): Promise<any> {
+  const verbose = true;
+  return rpc(methods.getrawtransaction, [id, verbose]);
 }
 
 function verifyMessage(
@@ -79,19 +120,15 @@ function verifyMessage(
   return rpc(methods.verifymessage, params);
 }
 
-function getTransaction(id: string): Promise<any> {
-  const verbose = true;
-  return rpc(methods.getrawtransaction, [id, verbose]);
-}
-function getRavencoinBalance(addresses: Array<string>) {
-  if (!addresses || addresses.length < 1) {
-    return {};
+function turnIntoStringArray(str: string | string[]): string[] {
+  if (typeof str === "string") {
+    return [str];
   }
-  const includeAssets = false;
-  const params = [{ addresses: addresses }, includeAssets];
-  return rpc(methods.getaddressbalance, params);
+  return str;
 }
+
 export default {
+  getAddressesByAsset,
   getAddressDeltas,
   getAddressMempool,
   getAllAssets,

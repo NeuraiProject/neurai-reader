@@ -24,11 +24,32 @@ function $c3f6c693698dc7cd$var$setPassword(newPassword) {
     $c3f6c693698dc7cd$var$password = newPassword;
     $c3f6c693698dc7cd$var$resetRPC();
 }
-function $c3f6c693698dc7cd$var$turnIntoStringArray(str) {
-    if (typeof str === "string") return [
-        str
-    ];
-    return str;
+/**
+  * 
+  * @param assetName mandatory
+  * @param onlytotal otional, when false result is just a list of addresses with balances -- when true the result is just a single number representing the number of addresses
+  * @param count (integer, optional, default=50000, MAX=50000) truncates results to include only the first _count_ assets found
+  * @param start (integer, optional, default=0) results skip over the first _start_ assets found (if negative it skips back from the end)
+  
+  */ function $c3f6c693698dc7cd$var$getAddressesByAsset(assetName, onlytotal, count, start) {
+    const _onlytotal = onlytotal === undefined ? false : onlytotal;
+    let _count = count === undefined ? 5000 : count;
+    let _start = start === undefined ? 0 : start;
+    if (_count > 50000) _count = 50000;
+    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).listaddressesbyasset, [
+        assetName,
+        _onlytotal,
+        _count,
+        _start
+    ]);
+}
+function $c3f6c693698dc7cd$var$getAddressDeltas(address) {
+    const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
+    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressdeltas, [
+        {
+            addresses: addresses
+        }
+    ]);
 }
 function $c3f6c693698dc7cd$var$getAddressMempool(address) {
     const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address); //Support both string and string array
@@ -40,12 +61,10 @@ function $c3f6c693698dc7cd$var$getAddressMempool(address) {
         includeAssets
     ]);
 }
-function $c3f6c693698dc7cd$var$getAddressDeltas(address) {
-    const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
-    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressdeltas, [
-        {
-            addresses: addresses
-        }
+function $c3f6c693698dc7cd$var$getAllAssets(prefix = "*", includeAllMetaData = false) {
+    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).listassets, [
+        prefix,
+        includeAllMetaData
     ]);
 }
 function $c3f6c693698dc7cd$var$getAssetBalance(address) {
@@ -63,30 +82,9 @@ function $c3f6c693698dc7cd$var$getAsset(name) {
         name
     ]);
 }
-function $c3f6c693698dc7cd$var$getAllAssets(prefix = "*", includeAllMetaData = false) {
-    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).listassets, [
-        prefix,
-        includeAllMetaData
-    ]);
-}
 function $c3f6c693698dc7cd$var$getMempool() {
     return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getrawmempool, [
         true
-    ]);
-}
-function $c3f6c693698dc7cd$var$verifyMessage(address, signature, message) {
-    const params = [
-        address,
-        signature,
-        message
-    ];
-    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).verifymessage, params);
-}
-function $c3f6c693698dc7cd$var$getTransaction(id) {
-    const verbose = true;
-    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getrawtransaction, [
-        id,
-        verbose
     ]);
 }
 function $c3f6c693698dc7cd$var$getRavencoinBalance(addresses) {
@@ -100,7 +98,29 @@ function $c3f6c693698dc7cd$var$getRavencoinBalance(addresses) {
     ];
     return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressbalance, params);
 }
+function $c3f6c693698dc7cd$var$getTransaction(id) {
+    const verbose = true;
+    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getrawtransaction, [
+        id,
+        verbose
+    ]);
+}
+function $c3f6c693698dc7cd$var$verifyMessage(address, signature, message) {
+    const params = [
+        address,
+        signature,
+        message
+    ];
+    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).verifymessage, params);
+}
+function $c3f6c693698dc7cd$var$turnIntoStringArray(str) {
+    if (typeof str === "string") return [
+        str
+    ];
+    return str;
+}
 var $c3f6c693698dc7cd$export$2e2bcd8739ae039 = {
+    getAddressesByAsset: $c3f6c693698dc7cd$var$getAddressesByAsset,
     getAddressDeltas: $c3f6c693698dc7cd$var$getAddressDeltas,
     getAddressMempool: $c3f6c693698dc7cd$var$getAddressMempool,
     getAllAssets: $c3f6c693698dc7cd$var$getAllAssets,
