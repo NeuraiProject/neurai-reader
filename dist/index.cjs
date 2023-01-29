@@ -55,11 +55,14 @@ function $80bd448eb6ea085b$var$setPassword(newPassword) {
 }
 function $80bd448eb6ea085b$var$getAddressDeltas(address) {
     const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address);
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getaddressdeltas, [
+    const assetName = ""; //Must be empty string, NOT "*"
+    const deltas = $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getaddressdeltas, [
         {
-            addresses: addresses
+            addresses: addresses,
+            assetName: assetName
         }
     ]);
+    return deltas;
 }
 function $80bd448eb6ea085b$var$getAddressMempool(address) {
     const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address); //Support both string and string array

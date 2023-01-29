@@ -45,11 +45,14 @@ function $c3f6c693698dc7cd$var$setPassword(newPassword) {
 }
 function $c3f6c693698dc7cd$var$getAddressDeltas(address) {
     const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
-    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressdeltas, [
+    const assetName = ""; //Must be empty string, NOT "*"
+    const deltas = $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressdeltas, [
         {
-            addresses: addresses
+            addresses: addresses,
+            assetName: assetName
         }
     ]);
+    return deltas;
 }
 function $c3f6c693698dc7cd$var$getAddressMempool(address) {
     const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address); //Support both string and string array

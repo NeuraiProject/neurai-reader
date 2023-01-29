@@ -59,8 +59,9 @@ function getAddressesByAsset(
 
 function getAddressDeltas(address: string | string[]): Promise<any[]> {
   const addresses = turnIntoStringArray(address);
-
-  return rpc(methods.getaddressdeltas, [{ addresses: addresses }]);
+  const assetName = "";//Must be empty string, NOT "*"
+  const deltas = rpc(methods.getaddressdeltas, [{ addresses, assetName }]);
+  return deltas;
 }
 
 function getAddressMempool(address: string | string[]): Promise<any> {
