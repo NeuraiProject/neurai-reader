@@ -19,7 +19,7 @@ declare function getBestBlockHash(): Promise<string>;
 declare function getBlockByHash(hash: string): Promise<any>;
 declare function getBlockByHeight(height: number): Promise<any>;
 declare function getMempool(): Promise<any>;
-declare function getRavencoinBalance(address: string | string[]): {};
+declare function getRavencoinBalance(address: string | string[]): Promise<any>;
 declare function getTransaction(id: string): Promise<any>;
 declare function verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
 declare const _default: {

@@ -59,7 +59,7 @@ function getAddressesByAsset(
 
 function getAddressDeltas(address: string | string[]): Promise<any[]> {
   const addresses = turnIntoStringArray(address);
-  const assetName = "";//Must be empty string, NOT "*"
+  const assetName = ""; //Must be empty string, NOT "*"
   const deltas = rpc(methods.getaddressdeltas, [{ addresses, assetName }]);
   return deltas;
 }
@@ -111,10 +111,11 @@ function getMempool() {
   return rpc(methods.getrawmempool, [true]);
 }
 
-function getRavencoinBalance(address: string | string[]) {
+function getRavencoinBalance(address: string | string[]): Promise<any> {
   const addresses = turnIntoStringArray(address);
   if (!addresses || addresses.length < 1) {
-    return {};
+    const emptyObject = {};
+    return Promise.resolve(emptyObject);
   }
   const includeAssets = false;
   const params = [{ addresses: addresses }, includeAssets];

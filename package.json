@@ -1,6 +1,6 @@
 {
   "name": "@ravenrebels/ravencoin-reader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Read information from Ravencoin blockchain",
   "source": "index.ts",
   "main": "./dist/index.cjs",

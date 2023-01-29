@@ -122,7 +122,10 @@ function $80bd448eb6ea085b$var$getMempool() {
 }
 function $80bd448eb6ea085b$var$getRavencoinBalance(address) {
     const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address);
-    if (!addresses || addresses.length < 1) return {};
+    if (!addresses || addresses.length < 1) {
+        const emptyObject = {};
+        return Promise.resolve(emptyObject);
+    }
     const includeAssets = false;
     const params = [
         {
