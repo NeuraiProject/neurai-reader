@@ -82,7 +82,7 @@ function getAllAssets(
 }
 
 function getAssetBalance(address: string | string[]): Promise<any> {
-  const addresses = turnIntoStringArray;
+  const addresses = turnIntoStringArray(address);
   const includeAssets = true;
   return rpc(methods.getaddressbalance, [
     { addresses: addresses },

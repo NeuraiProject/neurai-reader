@@ -81,7 +81,7 @@ function $80bd448eb6ea085b$var$getAllAssets(prefix = "*", includeAllMetaData = f
     ]);
 }
 function $80bd448eb6ea085b$var$getAssetBalance(address) {
-    const addresses = $80bd448eb6ea085b$var$turnIntoStringArray;
+    const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address);
     const includeAssets = true;
     return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getaddressbalance, [
         {

@@ -71,7 +71,7 @@ function $c3f6c693698dc7cd$var$getAllAssets(prefix = "*", includeAllMetaData = f
     ]);
 }
 function $c3f6c693698dc7cd$var$getAssetBalance(address) {
-    const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray;
+    const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
     const includeAssets = true;
     return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressbalance, [
         {
