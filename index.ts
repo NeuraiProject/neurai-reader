@@ -5,7 +5,7 @@ const ONE_FULL_COIN = 1e8;
 const URL_MAINNET = "https://rvn-rpc-mainnet.ting.finance/rpc";
 const URL_TESTNET = "https://rvn-rpc-testnet.ting.finance/rpc";
 
-let username = "anonymouse";
+let username = "anonymous";
 let password = "anonymous";
 let url = URL_MAINNET;
 

@@ -4,7 +4,7 @@ import {getRPC as $hCgyA$getRPC, methods as $hCgyA$methods} from "@ravenrebels/r
 const $c3f6c693698dc7cd$var$ONE_FULL_COIN = 1e8;
 const $c3f6c693698dc7cd$var$URL_MAINNET = "https://rvn-rpc-mainnet.ting.finance/rpc";
 const $c3f6c693698dc7cd$var$URL_TESTNET = "https://rvn-rpc-testnet.ting.finance/rpc";
-let $c3f6c693698dc7cd$var$username = "anonymouse";
+let $c3f6c693698dc7cd$var$username = "anonymous";
 let $c3f6c693698dc7cd$var$password = "anonymous";
 let $c3f6c693698dc7cd$var$url = $c3f6c693698dc7cd$var$URL_MAINNET;
 let $c3f6c693698dc7cd$var$rpc = (0, $hCgyA$getRPC)($c3f6c693698dc7cd$var$username, $c3f6c693698dc7cd$var$password, $c3f6c693698dc7cd$var$url);

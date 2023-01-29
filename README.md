@@ -12,7 +12,7 @@ Create an empty JavaScript project
 mkdir reader
 cd reader
 npm init -y
-npm install github:ravenrebels/ravencoin-reader
+npm install @ravenrebels/ravencoin-reader
 ```
 
 Now create a file called `index.mjs` the extension .mjs tells Node.js to support ECMA Module (ECMAScript Module).
