@@ -74,6 +74,14 @@ function $80bd448eb6ea085b$var$getAddressMempool(address) {
         includeAssets
     ]);
 }
+function $80bd448eb6ea085b$var$getAddressUTXOs(address) {
+    const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address); //Support both string and string array
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getaddressutxos, [
+        {
+            addresses: addresses
+        }
+    ]);
+}
 function $80bd448eb6ea085b$var$getAllAssets(prefix = "*", includeAllMetaData = false) {
     return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).listassets, [
         prefix,
@@ -160,6 +168,7 @@ var $80bd448eb6ea085b$export$2e2bcd8739ae039 = {
     getAddressesByAsset: $80bd448eb6ea085b$var$getAddressesByAsset,
     getAddressDeltas: $80bd448eb6ea085b$var$getAddressDeltas,
     getAddressMempool: $80bd448eb6ea085b$var$getAddressMempool,
+    getAddressUTXOs: $80bd448eb6ea085b$var$getAddressUTXOs,
     getAllAssets: $80bd448eb6ea085b$var$getAllAssets,
     getAsset: $80bd448eb6ea085b$var$getAsset,
     getAssetBalance: $80bd448eb6ea085b$var$getAssetBalance,

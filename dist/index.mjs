@@ -64,6 +64,14 @@ function $c3f6c693698dc7cd$var$getAddressMempool(address) {
         includeAssets
     ]);
 }
+function $c3f6c693698dc7cd$var$getAddressUTXOs(address) {
+    const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address); //Support both string and string array
+    return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressutxos, [
+        {
+            addresses: addresses
+        }
+    ]);
+}
 function $c3f6c693698dc7cd$var$getAllAssets(prefix = "*", includeAllMetaData = false) {
     return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).listassets, [
         prefix,
@@ -150,6 +158,7 @@ var $c3f6c693698dc7cd$export$2e2bcd8739ae039 = {
     getAddressesByAsset: $c3f6c693698dc7cd$var$getAddressesByAsset,
     getAddressDeltas: $c3f6c693698dc7cd$var$getAddressDeltas,
     getAddressMempool: $c3f6c693698dc7cd$var$getAddressMempool,
+    getAddressUTXOs: $c3f6c693698dc7cd$var$getAddressUTXOs,
     getAllAssets: $c3f6c693698dc7cd$var$getAllAssets,
     getAsset: $c3f6c693698dc7cd$var$getAsset,
     getAssetBalance: $c3f6c693698dc7cd$var$getAssetBalance,

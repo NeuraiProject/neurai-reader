@@ -9,9 +9,10 @@ declare function setPassword(newPassword: string): void;
   * @param start (integer, optional, default=0) results skip over the first _start_ assets found (if negative it skips back from the end)
   
   */
-declare function getAddressesByAsset(assetName: string, onlytotal?: boolean, count?: boolean, start?: boolean): Promise<any>;
+declare function getAddressesByAsset(assetName: string, onlytotal?: boolean, count?: number, start?: boolean): Promise<any>;
 declare function getAddressDeltas(address: string | string[]): Promise<any[]>;
 declare function getAddressMempool(address: string | string[]): Promise<any>;
+declare function getAddressUTXOs(address: string | string[]): Promise<any>;
 declare function getAllAssets(prefix?: string, includeAllMetaData?: boolean): Promise<any>;
 declare function getAssetBalance(address: string | string[]): Promise<any>;
 declare function getAsset(name: string): Promise<any>;
@@ -26,6 +27,7 @@ declare const _default: {
     getAddressesByAsset: typeof getAddressesByAsset;
     getAddressDeltas: typeof getAddressDeltas;
     getAddressMempool: typeof getAddressMempool;
+    getAddressUTXOs: typeof getAddressUTXOs;
     getAllAssets: typeof getAllAssets;
     getAsset: typeof getAsset;
     getAssetBalance: typeof getAssetBalance;

@@ -39,7 +39,7 @@ function setPassword(newPassword: string) {
 function getAddressesByAsset(
   assetName: string,
   onlytotal?: boolean,
-  count?: boolean,
+  count?: number,
   start?: boolean
 ): Promise<any> {
   const _onlytotal = onlytotal === undefined ? false : onlytotal;
@@ -73,7 +73,10 @@ function getAddressMempool(address: string | string[]): Promise<any> {
     includeAssets,
   ]);
 }
-
+function getAddressUTXOs(address: string | string[]): Promise<any> {
+  const addresses = turnIntoStringArray(address); //Support both string and string array
+  return rpc(methods.getaddressutxos, [{ addresses: addresses }]);
+}
 function getAllAssets(
   prefix: string = "*",
   includeAllMetaData: boolean = false
@@ -147,6 +150,7 @@ export default {
   getAddressesByAsset,
   getAddressDeltas,
   getAddressMempool,
+  getAddressUTXOs,
   getAllAssets,
   getAsset,
   getAssetBalance,
