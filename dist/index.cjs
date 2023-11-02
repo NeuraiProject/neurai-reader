@@ -1,8 +1,10 @@
 var $g5Y9E$ravenrebelsravencoinrpc = require("@ravenrebels/ravencoin-rpc");
 
+
 function $parcel$defineInteropFlag(a) {
   Object.defineProperty(a, '__esModule', {value: true, configurable: true});
 }
+
 function $parcel$export(e, n, v, s) {
   Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
 }
