@@ -1,4 +1,4 @@
-var $g5Y9E$ravenrebelsravencoinrpc = require("@ravenrebels/ravencoin-rpc");
+var $g5Y9E$neuraiprojectneurairpc = require("@neuraiproject/neurai-rpc");
 
 
 function $parcel$defineInteropFlag(a) {
@@ -14,14 +14,14 @@ $parcel$defineInteropFlag(module.exports);
 $parcel$export(module.exports, "default", () => $80bd448eb6ea085b$export$2e2bcd8739ae039);
 
 const $80bd448eb6ea085b$var$ONE_FULL_COIN = 1e8;
-const $80bd448eb6ea085b$var$URL_MAINNET = "https://rvn-rpc-mainnet.ting.finance/rpc";
-const $80bd448eb6ea085b$var$URL_TESTNET = "https://rvn-rpc-testnet.ting.finance/rpc";
+const $80bd448eb6ea085b$var$URL_MAINNET = "https://rpc-main.neurai.org/rpc";
+const $80bd448eb6ea085b$var$URL_TESTNET = "https://rpc-testnet.neurai.org/rpc";
 let $80bd448eb6ea085b$var$username = "anonymous";
 let $80bd448eb6ea085b$var$password = "anonymous";
 let $80bd448eb6ea085b$var$url = $80bd448eb6ea085b$var$URL_MAINNET;
-let $80bd448eb6ea085b$var$rpc = (0, $g5Y9E$ravenrebelsravencoinrpc.getRPC)($80bd448eb6ea085b$var$username, $80bd448eb6ea085b$var$password, $80bd448eb6ea085b$var$url);
+let $80bd448eb6ea085b$var$rpc = (0, $g5Y9E$neuraiprojectneurairpc.getRPC)($80bd448eb6ea085b$var$username, $80bd448eb6ea085b$var$password, $80bd448eb6ea085b$var$url);
 function $80bd448eb6ea085b$var$resetRPC() {
-    $80bd448eb6ea085b$var$rpc = (0, $g5Y9E$ravenrebelsravencoinrpc.getRPC)($80bd448eb6ea085b$var$username, $80bd448eb6ea085b$var$password, $80bd448eb6ea085b$var$url);
+    $80bd448eb6ea085b$var$rpc = (0, $g5Y9E$neuraiprojectneurairpc.getRPC)($80bd448eb6ea085b$var$username, $80bd448eb6ea085b$var$password, $80bd448eb6ea085b$var$url);
     return $80bd448eb6ea085b$var$rpc;
 }
 function $80bd448eb6ea085b$var$setURL(newURL) {
@@ -48,7 +48,7 @@ function $80bd448eb6ea085b$var$setPassword(newPassword) {
     let _count = count === undefined ? 5000 : count;
     let _start = start === undefined ? 0 : start;
     if (_count > 50000) _count = 50000;
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).listaddressesbyasset, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).listaddressesbyasset, [
         assetName,
         _onlytotal,
         _count,
@@ -58,7 +58,7 @@ function $80bd448eb6ea085b$var$setPassword(newPassword) {
 function $80bd448eb6ea085b$var$getAddressDeltas(address) {
     const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address);
     const assetName = ""; //Must be empty string, NOT "*"
-    const deltas = $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getaddressdeltas, [
+    const deltas = $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getaddressdeltas, [
         {
             addresses: addresses,
             assetName: assetName
@@ -69,7 +69,7 @@ function $80bd448eb6ea085b$var$getAddressDeltas(address) {
 function $80bd448eb6ea085b$var$getAddressMempool(address) {
     const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address); //Support both string and string array
     const includeAssets = true;
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getaddressmempool, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getaddressmempool, [
         {
             addresses: addresses
         },
@@ -78,14 +78,14 @@ function $80bd448eb6ea085b$var$getAddressMempool(address) {
 }
 function $80bd448eb6ea085b$var$getAddressUTXOs(address) {
     const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address); //Support both string and string array
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getaddressutxos, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getaddressutxos, [
         {
             addresses: addresses
         }
     ]);
 }
 function $80bd448eb6ea085b$var$getAllAssets(prefix = "*", includeAllMetaData = false) {
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).listassets, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).listassets, [
         prefix,
         includeAllMetaData
     ]);
@@ -93,7 +93,7 @@ function $80bd448eb6ea085b$var$getAllAssets(prefix = "*", includeAllMetaData = f
 function $80bd448eb6ea085b$var$getAssetBalance(address) {
     const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address);
     const includeAssets = true;
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getaddressbalance, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getaddressbalance, [
         {
             addresses: addresses
         },
@@ -101,24 +101,24 @@ function $80bd448eb6ea085b$var$getAssetBalance(address) {
     ]);
 }
 function $80bd448eb6ea085b$var$getAsset(name) {
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getassetdata, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getassetdata, [
         name
     ]);
 }
 function $80bd448eb6ea085b$var$getBestBlockHash() {
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getbestblockhash, []);
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getbestblockhash, []);
 }
 function $80bd448eb6ea085b$var$getBlockByHash(hash) {
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getblock, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getblock, [
         hash
     ]);
 }
 function $80bd448eb6ea085b$var$getBlockByHeight(height) {
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getblockhash, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getblockhash, [
         height
     ]).then((hash)=>{
         const verbosity = 3; //include transactions
-        const block = $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getblock, [
+        const block = $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getblock, [
             hash,
             verbosity
         ]);
@@ -126,11 +126,11 @@ function $80bd448eb6ea085b$var$getBlockByHeight(height) {
     });
 }
 function $80bd448eb6ea085b$var$getMempool() {
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getrawmempool, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getrawmempool, [
         true
     ]);
 }
-function $80bd448eb6ea085b$var$getRavencoinBalance(address) {
+function $80bd448eb6ea085b$var$getNeuraiBalance(address) {
     const addresses = $80bd448eb6ea085b$var$turnIntoStringArray(address);
     if (!addresses || addresses.length < 1) {
         const emptyObject = {};
@@ -143,11 +143,11 @@ function $80bd448eb6ea085b$var$getRavencoinBalance(address) {
         },
         includeAssets
     ];
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getaddressbalance, params);
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getaddressbalance, params);
 }
 function $80bd448eb6ea085b$var$getTransaction(id) {
     const verbose = true;
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).getrawtransaction, [
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getrawtransaction, [
         id,
         verbose
     ]);
@@ -158,7 +158,7 @@ function $80bd448eb6ea085b$var$verifyMessage(address, signature, message) {
         signature,
         message
     ];
-    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$ravenrebelsravencoinrpc.methods).verifymessage, params);
+    return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).verifymessage, params);
 }
 function $80bd448eb6ea085b$var$turnIntoStringArray(str) {
     if (typeof str === "string") return [
@@ -178,7 +178,7 @@ var $80bd448eb6ea085b$export$2e2bcd8739ae039 = {
     getBlockByHash: $80bd448eb6ea085b$var$getBlockByHash,
     getBlockByHeight: $80bd448eb6ea085b$var$getBlockByHeight,
     getMempool: $80bd448eb6ea085b$var$getMempool,
-    getRavencoinBalance: $80bd448eb6ea085b$var$getRavencoinBalance,
+    getNeuraiBalance: $80bd448eb6ea085b$var$getNeuraiBalance,
     getTransaction: $80bd448eb6ea085b$var$getTransaction,
     setUsername: $80bd448eb6ea085b$var$setUsername,
     setPassword: $80bd448eb6ea085b$var$setPassword,

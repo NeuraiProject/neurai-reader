@@ -1,7 +1,7 @@
 {
-  "name": "@ravenrebels/ravencoin-reader",
+  "name": "@neuraiproject/neurai-reader",
   "version": "0.0.7",
-  "description": "Read information from Ravencoin blockchain",
+  "description": "Read information from Neurai blockchain",
   "source": "index.ts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -15,19 +15,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ravenrebels/ravencoin-reader.git"
+    "url": "git+https://github.com/neuraiproject/neurai-reader.git"
   },
   "keywords": [],
-  "author": "Raven Rebels - Dick Henrik Larsson",
+  "author": "Neuraiproject",
   "license": "MIT",
   "dependencies": {
-    "@ravenrebels/ravencoin-rpc": "^0.3.3",
+    "@neuraiproject/neurai-rpc": "^0.4.2",
     "parcel": "^2.10.2"
   },
   "bugs": {
-    "url": "https://github.com/ravenrebels/ravencoin-reader/issues"
+    "url": "https://github.com/neuraiproject/neurai-reader/issues"
   },
-  "homepage": "https://github.com/ravenrebels/ravencoin-reader#readme",
+  "homepage": "https://github.com/neuraiproject/neurai-reader#readme",
   "devDependencies": {
     "@parcel/packager-ts": "^2.10.2",
     "@parcel/transformer-typescript-types": "^2.10.2",

@@ -1,9 +1,9 @@
-import { getRPC, methods } from "@ravenrebels/ravencoin-rpc";
+import { getRPC, methods } from "@neuraiproject/neurai-rpc";
 
 const ONE_FULL_COIN = 1e8;
 
-const URL_MAINNET = "https://rvn-rpc-mainnet.ting.finance/rpc";
-const URL_TESTNET = "https://rvn-rpc-testnet.ting.finance/rpc";
+const URL_MAINNET = "https://rpc-main.neurai.org/rpc";
+const URL_TESTNET = "https://rpc-testnet.neurai.org/rpc";
 
 let username = "anonymous";
 let password = "anonymous";
@@ -114,7 +114,7 @@ function getMempool() {
   return rpc(methods.getrawmempool, [true]);
 }
 
-function getRavencoinBalance(address: string | string[]): Promise<any> {
+function getNeuraiBalance(address: string | string[]): Promise<any> {
   const addresses = turnIntoStringArray(address);
   if (!addresses || addresses.length < 1) {
     const emptyObject = {};
@@ -158,7 +158,7 @@ export default {
   getBlockByHash,
   getBlockByHeight,
   getMempool,
-  getRavencoinBalance,
+  getNeuraiBalance,
   getTransaction,
   setUsername,
   setPassword,

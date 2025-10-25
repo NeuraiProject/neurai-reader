@@ -20,7 +20,7 @@ declare function getBestBlockHash(): Promise<string>;
 declare function getBlockByHash(hash: string): Promise<any>;
 declare function getBlockByHeight(height: number): Promise<any>;
 declare function getMempool(): Promise<any>;
-declare function getRavencoinBalance(address: string | string[]): Promise<any>;
+declare function getNeuraiBalance(address: string | string[]): Promise<any>;
 declare function getTransaction(id: string): Promise<any>;
 declare function verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
 declare const _default: {
@@ -35,7 +35,7 @@ declare const _default: {
     getBlockByHash: typeof getBlockByHash;
     getBlockByHeight: typeof getBlockByHeight;
     getMempool: typeof getMempool;
-    getRavencoinBalance: typeof getRavencoinBalance;
+    getNeuraiBalance: typeof getNeuraiBalance;
     getTransaction: typeof getTransaction;
     setUsername: typeof setUsername;
     setPassword: typeof setPassword;

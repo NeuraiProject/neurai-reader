@@ -1,7 +1,7 @@
-# ravencoin-reader
+# neurai-reader
 ![image](https://user-images.githubusercontent.com/9694984/214588738-2d4f4522-44ec-44dd-9962-3bd4534bab4d.png)
 
-Read information from Ravencoin blockchain
+Read information from Neurai blockchain
 
 
 
@@ -12,14 +12,14 @@ Create an empty JavaScript project
 mkdir reader
 cd reader
 npm init -y
-npm install @ravenrebels/ravencoin-reader
+npm install @neuraiproject/neurai-reader
 ```
 
 Now create a file called `index.mjs` the extension .mjs tells Node.js to support ECMA Module (ECMAScript Module).
 
 Add content to index.mjs
 ```
-import Reader from "@ravenrebels/ravencoin-reader";
+import Reader from "@neuraiproject/neurai-reader";
 
 Reader.getAsset("FREN#RED").then(console.table);
 ```
@@ -47,7 +47,7 @@ declare function getBestBlockHash(): Promise<string>;
 declare function getBlockByHash(hash: string): Promise<any>;
 declare function getBlockByHeight(height: number): Promise<any>;
 declare function getMempool(): Promise<any>;
-declare function getRavencoinBalance(address: string | string[]): {};
+declare function getNeuraiBalance(address: string | string[]): {};
 declare function getTransaction(id: string): Promise<any>;
 declare function verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
 

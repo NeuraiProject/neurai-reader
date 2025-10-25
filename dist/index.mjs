@@ -1,9 +1,9 @@
-import {getRPC as $hCgyA$getRPC, methods as $hCgyA$methods} from "@ravenrebels/ravencoin-rpc";
+import {getRPC as $hCgyA$getRPC, methods as $hCgyA$methods} from "@neuraiproject/neurai-rpc";
 
 
 const $c3f6c693698dc7cd$var$ONE_FULL_COIN = 1e8;
-const $c3f6c693698dc7cd$var$URL_MAINNET = "https://rvn-rpc-mainnet.ting.finance/rpc";
-const $c3f6c693698dc7cd$var$URL_TESTNET = "https://rvn-rpc-testnet.ting.finance/rpc";
+const $c3f6c693698dc7cd$var$URL_MAINNET = "https://rpc-main.neurai.org/rpc";
+const $c3f6c693698dc7cd$var$URL_TESTNET = "https://rpc-testnet.neurai.org/rpc";
 let $c3f6c693698dc7cd$var$username = "anonymous";
 let $c3f6c693698dc7cd$var$password = "anonymous";
 let $c3f6c693698dc7cd$var$url = $c3f6c693698dc7cd$var$URL_MAINNET;
@@ -118,7 +118,7 @@ function $c3f6c693698dc7cd$var$getMempool() {
         true
     ]);
 }
-function $c3f6c693698dc7cd$var$getRavencoinBalance(address) {
+function $c3f6c693698dc7cd$var$getNeuraiBalance(address) {
     const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
     if (!addresses || addresses.length < 1) {
         const emptyObject = {};
@@ -166,7 +166,7 @@ var $c3f6c693698dc7cd$export$2e2bcd8739ae039 = {
     getBlockByHash: $c3f6c693698dc7cd$var$getBlockByHash,
     getBlockByHeight: $c3f6c693698dc7cd$var$getBlockByHeight,
     getMempool: $c3f6c693698dc7cd$var$getMempool,
-    getRavencoinBalance: $c3f6c693698dc7cd$var$getRavencoinBalance,
+    getNeuraiBalance: $c3f6c693698dc7cd$var$getNeuraiBalance,
     getTransaction: $c3f6c693698dc7cd$var$getTransaction,
     setUsername: $c3f6c693698dc7cd$var$setUsername,
     setPassword: $c3f6c693698dc7cd$var$setPassword,
