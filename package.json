@@ -1,6 +1,6 @@
 {
   "name": "@neuraiproject/neurai-reader",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Read information from Neurai blockchain",
   "source": "index.ts",
   "main": "./dist/index.cjs",

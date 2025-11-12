@@ -133,6 +133,19 @@ function $c3f6c693698dc7cd$var$getNeuraiBalance(address) {
     ];
     return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getaddressbalance, params);
 }
+/**
+ * Get the public key for an address
+ * @param address The Neurai address to query
+ * @returns Object with address, pubkey, revealed status, height, and txid
+ * - revealed: 1 if pubkey has been revealed on-chain, 0 if not
+ * - pubkey: The public key (empty string if not revealed)
+ * - height: Block height where pubkey was first revealed (0 if not revealed)
+ * - txid: Transaction ID where pubkey was first revealed (empty string if not revealed)
+ */ function $c3f6c693698dc7cd$var$getPubKey(address) {
+    return $c3f6c693698dc7cd$var$rpc("getpubkey", [
+        address
+    ]);
+}
 function $c3f6c693698dc7cd$var$getTransaction(id) {
     const verbose = true;
     return $c3f6c693698dc7cd$var$rpc((0, $hCgyA$methods).getrawtransaction, [
@@ -167,6 +180,7 @@ var $c3f6c693698dc7cd$export$2e2bcd8739ae039 = {
     getBlockByHeight: $c3f6c693698dc7cd$var$getBlockByHeight,
     getMempool: $c3f6c693698dc7cd$var$getMempool,
     getNeuraiBalance: $c3f6c693698dc7cd$var$getNeuraiBalance,
+    getPubKey: $c3f6c693698dc7cd$var$getPubKey,
     getTransaction: $c3f6c693698dc7cd$var$getTransaction,
     setUsername: $c3f6c693698dc7cd$var$setUsername,
     setPassword: $c3f6c693698dc7cd$var$setPassword,

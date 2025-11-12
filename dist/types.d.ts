@@ -21,6 +21,22 @@ declare function getBlockByHash(hash: string): Promise<any>;
 declare function getBlockByHeight(height: number): Promise<any>;
 declare function getMempool(): Promise<any>;
 declare function getNeuraiBalance(address: string | string[]): Promise<any>;
+/**
+ * Get the public key for an address
+ * @param address The Neurai address to query
+ * @returns Object with address, pubkey, revealed status, height, and txid
+ * - revealed: 1 if pubkey has been revealed on-chain, 0 if not
+ * - pubkey: The public key (empty string if not revealed)
+ * - height: Block height where pubkey was first revealed (0 if not revealed)
+ * - txid: Transaction ID where pubkey was first revealed (empty string if not revealed)
+ */
+declare function getPubKey(address: string): Promise<{
+    address: string;
+    pubkey: string;
+    revealed: number;
+    height: number;
+    txid: string;
+}>;
 declare function getTransaction(id: string): Promise<any>;
 declare function verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
 declare const _default: {
@@ -36,6 +52,7 @@ declare const _default: {
     getBlockByHeight: typeof getBlockByHeight;
     getMempool: typeof getMempool;
     getNeuraiBalance: typeof getNeuraiBalance;
+    getPubKey: typeof getPubKey;
     getTransaction: typeof getTransaction;
     setUsername: typeof setUsername;
     setPassword: typeof setPassword;

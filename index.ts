@@ -125,6 +125,25 @@ function getNeuraiBalance(address: string | string[]): Promise<any> {
   return rpc(methods.getaddressbalance, params);
 }
 
+/**
+ * Get the public key for an address
+ * @param address The Neurai address to query
+ * @returns Object with address, pubkey, revealed status, height, and txid
+ * - revealed: 1 if pubkey has been revealed on-chain, 0 if not
+ * - pubkey: The public key (empty string if not revealed)
+ * - height: Block height where pubkey was first revealed (0 if not revealed)
+ * - txid: Transaction ID where pubkey was first revealed (empty string if not revealed)
+ */
+function getPubKey(address: string): Promise<{
+  address: string;
+  pubkey: string;
+  revealed: number;
+  height: number;
+  txid: string;
+}> {
+  return rpc("getpubkey", [address]);
+}
+
 function getTransaction(id: string): Promise<any> {
   const verbose = true;
   return rpc(methods.getrawtransaction, [id, verbose]);
@@ -159,6 +178,7 @@ export default {
   getBlockByHeight,
   getMempool,
   getNeuraiBalance,
+  getPubKey,
   getTransaction,
   setUsername,
   setPassword,

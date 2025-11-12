@@ -145,6 +145,19 @@ function $80bd448eb6ea085b$var$getNeuraiBalance(address) {
     ];
     return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getaddressbalance, params);
 }
+/**
+ * Get the public key for an address
+ * @param address The Neurai address to query
+ * @returns Object with address, pubkey, revealed status, height, and txid
+ * - revealed: 1 if pubkey has been revealed on-chain, 0 if not
+ * - pubkey: The public key (empty string if not revealed)
+ * - height: Block height where pubkey was first revealed (0 if not revealed)
+ * - txid: Transaction ID where pubkey was first revealed (empty string if not revealed)
+ */ function $80bd448eb6ea085b$var$getPubKey(address) {
+    return $80bd448eb6ea085b$var$rpc("getpubkey", [
+        address
+    ]);
+}
 function $80bd448eb6ea085b$var$getTransaction(id) {
     const verbose = true;
     return $80bd448eb6ea085b$var$rpc((0, $g5Y9E$neuraiprojectneurairpc.methods).getrawtransaction, [
@@ -179,6 +192,7 @@ var $80bd448eb6ea085b$export$2e2bcd8739ae039 = {
     getBlockByHeight: $80bd448eb6ea085b$var$getBlockByHeight,
     getMempool: $80bd448eb6ea085b$var$getMempool,
     getNeuraiBalance: $80bd448eb6ea085b$var$getNeuraiBalance,
+    getPubKey: $80bd448eb6ea085b$var$getPubKey,
     getTransaction: $80bd448eb6ea085b$var$getTransaction,
     setUsername: $80bd448eb6ea085b$var$setUsername,
     setPassword: $80bd448eb6ea085b$var$setPassword,

@@ -48,6 +48,7 @@ declare function getBlockByHash(hash: string): Promise<any>;
 declare function getBlockByHeight(height: number): Promise<any>;
 declare function getMempool(): Promise<any>;
 declare function getNeuraiBalance(address: string | string[]): {};
+declare function getPubKey(address: string): Promise<{address: string; pubkey: string; revealed: number; height: number; txid: string;}>;
 declare function getTransaction(id: string): Promise<any>;
 declare function verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
 
