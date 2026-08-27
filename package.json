@@ -23,8 +23,13 @@
   },
   "scripts": {
     "build": "parcel build && node scripts/postbuild.mjs",
-    "test": "node --test \"tests/*.test.*\"",
+    "pretest": "npm run build",
+    "test": "node --test \"tests/*.test.*\" && npm run test:package",
+    "test:package": "node scripts/test-package.mjs",
     "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "repository": {
     "type": "git",

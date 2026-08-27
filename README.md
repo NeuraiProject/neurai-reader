@@ -132,6 +132,21 @@ try {
 }
 ```
 
+TypeScript consumers can narrow the error without assertions using the named
+guard and its exported `ReaderRpcError` interface:
+
+```ts
+import { isReaderRpcError } from "@neuraiproject/neurai-reader";
+
+try {
+  await Reader.getBlockByHash(hash);
+} catch (error) {
+  if (isReaderRpcError(error) && error.code === -5) {
+    // Block not found; error.cause contains the original RPC rejection.
+  }
+}
+```
+
 If your code relied on `undefined` results to detect failures (0.0.x
 behaviour), switch to `try/catch`.
 

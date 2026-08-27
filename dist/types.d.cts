@@ -1,5 +1,12 @@
 export const URL_MAINNET = "https://rpc-main.neurai.org/rpc";
 export const URL_TESTNET = "https://rpc-testnet.neurai.org/rpc";
+/** Normalized failure returned by every RPC-backed Reader method. */
+export interface ReaderRpcError extends Error {
+    cause: unknown;
+    code?: number;
+}
+/** Type guard for errors produced by the Reader RPC transport. */
+export function isReaderRpcError(value: unknown): value is ReaderRpcError;
 /** getaddressbalance without assets: satoshi totals for the address set. */
 export interface IAddressBalance {
     balance: number;
@@ -49,7 +56,11 @@ export interface IAssetData {
     has_ipfs: number;
     block_height?: number;
     blockhash?: string;
+    /** Transaction id encoded as asset data when has_ipfs is set. */
+    txid?: string;
     ipfs_hash?: string;
+    /** Present for restricted assets. */
+    verifier_string?: string;
     [key: string]: unknown;
 }
 export interface IBlockchainInfo {

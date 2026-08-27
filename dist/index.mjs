@@ -1,14 +1,14 @@
-import {getRPC as $hCgyA$getRPC, methods as $hCgyA$methods} from "@neuraiproject/neurai-rpc";
+import {getRPC as $d7Elf$getRPC, methods as $d7Elf$methods} from "@neuraiproject/neurai-rpc";
 
 
-const $c3f6c693698dc7cd$var$ONE_FULL_COIN = 1e8;
-const $c3f6c693698dc7cd$export$7704e714695cc7a8 = "https://rpc-main.neurai.org/rpc";
-const $c3f6c693698dc7cd$export$b6d3241152c7efb = "https://rpc-testnet.neurai.org/rpc";
-const $c3f6c693698dc7cd$var$NORMALIZED_BRAND = Symbol.for("neurai.reader.normalizedRpcError");
-function $c3f6c693698dc7cd$var$isNormalizedRpcError(value) {
-    return value instanceof Error && value[$c3f6c693698dc7cd$var$NORMALIZED_BRAND] === true;
+const $6963de71636421d7$var$ONE_FULL_COIN = 1e8;
+const $6963de71636421d7$export$7704e714695cc7a8 = "https://rpc-main.neurai.org/rpc";
+const $6963de71636421d7$export$b6d3241152c7efb = "https://rpc-testnet.neurai.org/rpc";
+const $6963de71636421d7$var$NORMALIZED_BRAND = Symbol.for("neurai.reader.normalizedRpcError");
+function $6963de71636421d7$export$c259d14e3ba8e12d(value) {
+    return value instanceof Error && value[$6963de71636421d7$var$NORMALIZED_BRAND] === true;
 }
-function $c3f6c693698dc7cd$var$stringifyUnknown(value) {
+function $6963de71636421d7$var$stringifyUnknown(value) {
     if (typeof value === "string") return value;
     try {
         return JSON.stringify(value);
@@ -16,7 +16,7 @@ function $c3f6c693698dc7cd$var$stringifyUnknown(value) {
         return String(value);
     }
 }
-function $c3f6c693698dc7cd$var$describeRpcRejection(reason) {
+function $6963de71636421d7$var$describeRpcRejection(reason) {
     if (reason instanceof Error && reason.message) return reason.message;
     if (typeof reason === "string") return reason;
     if (reason && typeof reason === "object") {
@@ -24,72 +24,73 @@ function $c3f6c693698dc7cd$var$describeRpcRejection(reason) {
         if (value.error && typeof value.error === "object") {
             const rpcError = value.error;
             if (rpcError.message) return rpcError.code !== undefined && rpcError.code !== null ? `${String(rpcError.message)} (code ${String(rpcError.code)})` : String(rpcError.message);
-            return $c3f6c693698dc7cd$var$stringifyUnknown(value.error);
+            return $6963de71636421d7$var$stringifyUnknown(value.error);
         }
-        if (value.error) return $c3f6c693698dc7cd$var$stringifyUnknown(value.error);
-        if (value.description) return $c3f6c693698dc7cd$var$stringifyUnknown(value.description);
+        if (value.error) return $6963de71636421d7$var$stringifyUnknown(value.error);
+        if (value.description) return $6963de71636421d7$var$stringifyUnknown(value.description);
         if (value.status || value.statusText) return `HTTP ${String(value.status ?? "")} ${String(value.statusText ?? "")}`.trim();
-        return $c3f6c693698dc7cd$var$stringifyUnknown(reason);
+        return $6963de71636421d7$var$stringifyUnknown(reason);
     }
     return "Unknown RPC error";
 }
-function $c3f6c693698dc7cd$var$extractJsonRpcCode(reason) {
+function $6963de71636421d7$var$extractJsonRpcCode(reason) {
     if (!reason || typeof reason !== "object") return undefined;
     const error = reason.error;
     if (!error || typeof error !== "object") return undefined;
     const code = error.code;
     return typeof code === "number" ? code : undefined;
 }
-function $c3f6c693698dc7cd$var$normalizeRpcError(reason, context) {
-    if ($c3f6c693698dc7cd$var$isNormalizedRpcError(reason)) return reason;
-    const err = new Error(`${context}: ${$c3f6c693698dc7cd$var$describeRpcRejection(reason)}`);
+function $6963de71636421d7$var$normalizeRpcError(reason, context) {
+    if ($6963de71636421d7$export$c259d14e3ba8e12d(reason)) return reason;
+    const err = new Error(`${context}: ${$6963de71636421d7$var$describeRpcRejection(reason)}`);
     err.cause = reason;
-    const code = $c3f6c693698dc7cd$var$extractJsonRpcCode(reason);
+    const code = $6963de71636421d7$var$extractJsonRpcCode(reason);
     if (code !== undefined) err.code = code;
-    err[$c3f6c693698dc7cd$var$NORMALIZED_BRAND] = true;
+    err[$6963de71636421d7$var$NORMALIZED_BRAND] = true;
     return err;
 }
-function $c3f6c693698dc7cd$var$wrapRpc(rpc) {
+function $6963de71636421d7$var$wrapRpc(rpc) {
     return async function normalizedRpc(method, params) {
         try {
             return await rpc(method, params);
         } catch (reason) {
-            throw $c3f6c693698dc7cd$var$normalizeRpcError(reason, `RPC ${String(method)} failed`);
+            throw $6963de71636421d7$var$normalizeRpcError(reason, `RPC ${String(method)} failed`);
         }
     };
 }
-function $c3f6c693698dc7cd$var$turnIntoStringArray(str) {
+function $6963de71636421d7$var$turnIntoStringArray(str) {
     if (typeof str === "string") return [
         str
     ];
     return str;
 }
-function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
-    let url = options.url ?? $c3f6c693698dc7cd$export$7704e714695cc7a8;
+function $6963de71636421d7$export$3687857846e34983(options = {}) {
+    let url = options.url ?? $6963de71636421d7$export$7704e714695cc7a8;
     let username = options.username ?? "anonymous";
     let password = options.password ?? "anonymous";
-    let rpc = $c3f6c693698dc7cd$var$wrapRpc((0, $hCgyA$getRPC)(username, password, url));
-    function resetRPC() {
-        rpc = $c3f6c693698dc7cd$var$wrapRpc((0, $hCgyA$getRPC)(username, password, url));
-        return rpc;
+    let rpc = $6963de71636421d7$var$wrapRpc((0, $d7Elf$getRPC)(username, password, url));
+    /** Build first, then commit state so a rejected value cannot poison the
+   * instance while leaving the previous RPC client installed. */ function setConnection(newURL, newUsername, newPassword) {
+        const newRPC = $6963de71636421d7$var$wrapRpc((0, $d7Elf$getRPC)(newUsername, newPassword, newURL));
+        url = newURL;
+        username = newUsername;
+        password = newPassword;
+        rpc = newRPC;
     }
     function setURL(newURL) {
-        url = newURL;
-        resetRPC();
+        setConnection(newURL, username, password);
     }
     function setUsername(newUsername) {
-        username = newUsername;
-        resetRPC();
+        setConnection(url, newUsername, password);
     }
     function setPassword(newPassword) {
-        password = newPassword;
-        resetRPC();
+        setConnection(url, username, newPassword);
     }
     function setMainnet() {
-        setURL($c3f6c693698dc7cd$export$7704e714695cc7a8);
+        setURL($6963de71636421d7$export$7704e714695cc7a8);
     }
     function setTestnet() {
-        setURL($c3f6c693698dc7cd$export$b6d3241152c7efb);
+        setURL($6963de71636421d7$export$b6d3241152c7efb);
     }
     /**
    * @param assetName mandatory
@@ -104,7 +105,7 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
         let _count = count === undefined ? 5000 : count;
         const _start = start === undefined ? 0 : start;
         if (_count > 50000) _count = 50000;
-        return rpc((0, $hCgyA$methods).listaddressesbyasset, [
+        return rpc((0, $d7Elf$methods).listaddressesbyasset, [
             assetName,
             _onlytotal,
             _count,
@@ -116,8 +117,8 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
    * the historic behaviour: empty string = deltas for XNA and every asset.
    * Pass "XNA" or an asset name to filter.
    */ function getAddressDeltas(address, assetName = "") {
-        const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
-        return rpc((0, $hCgyA$methods).getaddressdeltas, [
+        const addresses = $6963de71636421d7$var$turnIntoStringArray(address);
+        return rpc((0, $d7Elf$methods).getaddressdeltas, [
             {
                 addresses: addresses,
                 assetName: assetName
@@ -125,9 +126,9 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
         ]);
     }
     function getAddressMempool(address) {
-        const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
+        const addresses = $6963de71636421d7$var$turnIntoStringArray(address);
         const includeAssets = true;
-        return rpc((0, $hCgyA$methods).getaddressmempool, [
+        return rpc((0, $d7Elf$methods).getaddressmempool, [
             {
                 addresses: addresses
             },
@@ -139,8 +140,8 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
    * false, matching the node: asset transactions are only included when
    * explicitly requested.
    */ function getAddressTxids(address, includeAssets = false) {
-        const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
-        return rpc((0, $hCgyA$methods).getaddresstxids, [
+        const addresses = $6963de71636421d7$var$turnIntoStringArray(address);
+        return rpc((0, $d7Elf$methods).getaddresstxids, [
             {
                 addresses: addresses
             },
@@ -148,23 +149,23 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
         ]);
     }
     function getAddressUTXOs(address) {
-        const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
-        return rpc((0, $hCgyA$methods).getaddressutxos, [
+        const addresses = $6963de71636421d7$var$turnIntoStringArray(address);
+        return rpc((0, $d7Elf$methods).getaddressutxos, [
             {
                 addresses: addresses
             }
         ]);
     }
     function getAllAssets(prefix = "*", includeAllMetaData = false) {
-        return rpc((0, $hCgyA$methods).listassets, [
+        return rpc((0, $d7Elf$methods).listassets, [
             prefix,
             includeAllMetaData
         ]);
     }
     function getAssetBalance(address) {
-        const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
+        const addresses = $6963de71636421d7$var$turnIntoStringArray(address);
         const includeAssets = true;
-        return rpc((0, $hCgyA$methods).getaddressbalance, [
+        return rpc((0, $d7Elf$methods).getaddressbalance, [
             {
                 addresses: addresses
             },
@@ -172,7 +173,7 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
         ]);
     }
     function getAsset(name) {
-        return rpc((0, $hCgyA$methods).getassetdata, [
+        return rpc((0, $d7Elf$methods).getassetdata, [
             name
         ]);
     }
@@ -187,7 +188,7 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
         }, 0);
     }
     function getBestBlockHash() {
-        return rpc((0, $hCgyA$methods).getbestblockhash, []);
+        return rpc((0, $d7Elf$methods).getbestblockhash, []);
     }
     function getBlockByHash(hash, verbosity) {
         const params = verbosity === undefined ? [
@@ -196,28 +197,28 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
             hash,
             verbosity
         ];
-        return rpc((0, $hCgyA$methods).getblock, params);
+        return rpc((0, $d7Elf$methods).getblock, params);
     }
     function getBlockByHeight(height, verbosity = 3) {
-        return rpc((0, $hCgyA$methods).getblockhash, [
+        return rpc((0, $d7Elf$methods).getblockhash, [
             height
         ]).then((hash)=>{
-            return rpc((0, $hCgyA$methods).getblock, [
+            return rpc((0, $d7Elf$methods).getblock, [
                 hash,
                 verbosity
             ]);
         });
     }
     function getBlockchainInfo() {
-        return rpc((0, $hCgyA$methods).getblockchaininfo, []);
+        return rpc((0, $d7Elf$methods).getblockchaininfo, []);
     }
     function getMempool() {
-        return rpc((0, $hCgyA$methods).getrawmempool, [
+        return rpc((0, $d7Elf$methods).getrawmempool, [
             true
         ]);
     }
     function getNeuraiBalance(address) {
-        const addresses = $c3f6c693698dc7cd$var$turnIntoStringArray(address);
+        const addresses = $6963de71636421d7$var$turnIntoStringArray(address);
         if (!addresses || addresses.length < 1) {
             const emptyObject = {};
             return Promise.resolve(emptyObject);
@@ -229,7 +230,7 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
             },
             includeAssets
         ];
-        return rpc((0, $hCgyA$methods).getaddressbalance, params);
+        return rpc((0, $d7Elf$methods).getaddressbalance, params);
     }
     /**
    * Net unconfirmed balance change for `assetName` (default "XNA") taken
@@ -247,20 +248,20 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
    * - height: Block height where pubkey was first revealed (0 if not revealed)
    * - txid: Transaction ID where pubkey was first revealed (empty if not)
    */ function getPubKey(address) {
-        return rpc((0, $hCgyA$methods).getpubkey, [
+        return rpc((0, $d7Elf$methods).getpubkey, [
             address
         ]);
     }
     function getTransaction(id) {
         const verbose = true;
-        return rpc((0, $hCgyA$methods).getrawtransaction, [
+        return rpc((0, $d7Elf$methods).getrawtransaction, [
             id,
             verbose
         ]);
     }
     /** Format a satoshi amount as a display string with 8 decimals. */ function formatBalance(satoshis) {
         if (!satoshis) return "0";
-        return (satoshis / $c3f6c693698dc7cd$var$ONE_FULL_COIN).toFixed(8);
+        return (satoshis / $6963de71636421d7$var$ONE_FULL_COIN).toFixed(8);
     }
     function verifyMessage(address, signature, message) {
         const params = [
@@ -268,7 +269,7 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
             signature,
             message
         ];
-        return rpc((0, $hCgyA$methods).verifymessage, params);
+        return rpc((0, $d7Elf$methods).verifymessage, params);
     }
     return {
         setURL: setURL,
@@ -301,14 +302,14 @@ function $c3f6c693698dc7cd$export$3687857846e34983(options = {}) {
 // Default export: a singleton Reader with the historic defaults (mainnet,
 // anonymous credentials), plus the factory and the public URLs — the exact
 // surface 0.0.9 consumers already use, extended.
-const $c3f6c693698dc7cd$var$defaultReader = $c3f6c693698dc7cd$export$3687857846e34983();
-var $c3f6c693698dc7cd$export$2e2bcd8739ae039 = {
-    ...$c3f6c693698dc7cd$var$defaultReader,
-    createReader: $c3f6c693698dc7cd$export$3687857846e34983,
-    URL_MAINNET: $c3f6c693698dc7cd$export$7704e714695cc7a8,
-    URL_TESTNET: $c3f6c693698dc7cd$export$b6d3241152c7efb
+const $6963de71636421d7$var$defaultReader = $6963de71636421d7$export$3687857846e34983();
+var $6963de71636421d7$export$2e2bcd8739ae039 = {
+    ...$6963de71636421d7$var$defaultReader,
+    createReader: $6963de71636421d7$export$3687857846e34983,
+    URL_MAINNET: $6963de71636421d7$export$7704e714695cc7a8,
+    URL_TESTNET: $6963de71636421d7$export$b6d3241152c7efb
 };
 
 
-export {$c3f6c693698dc7cd$export$7704e714695cc7a8 as URL_MAINNET, $c3f6c693698dc7cd$export$b6d3241152c7efb as URL_TESTNET, $c3f6c693698dc7cd$export$3687857846e34983 as createReader, $c3f6c693698dc7cd$export$2e2bcd8739ae039 as default};
+export {$6963de71636421d7$export$7704e714695cc7a8 as URL_MAINNET, $6963de71636421d7$export$b6d3241152c7efb as URL_TESTNET, $6963de71636421d7$export$c259d14e3ba8e12d as isReaderRpcError, $6963de71636421d7$export$3687857846e34983 as createReader, $6963de71636421d7$export$2e2bcd8739ae039 as default};
 //# sourceMappingURL=index.mjs.map

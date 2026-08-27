@@ -30,7 +30,14 @@ type RpcErrorShape = {
 
 const NORMALIZED_BRAND = Symbol.for("neurai.reader.normalizedRpcError");
 
-function isNormalizedRpcError(value: unknown): value is Error {
+/** Normalized failure returned by every RPC-backed Reader method. */
+export interface ReaderRpcError extends Error {
+  cause: unknown;
+  code?: number;
+}
+
+/** Type guard for errors produced by the Reader RPC transport. */
+export function isReaderRpcError(value: unknown): value is ReaderRpcError {
   return (
     value instanceof Error &&
     (value as unknown as Record<symbol, unknown>)[NORMALIZED_BRAND] === true
@@ -83,13 +90,12 @@ function extractJsonRpcCode(reason: unknown): number | undefined {
   return typeof code === "number" ? code : undefined;
 }
 
-function normalizeRpcError(reason: unknown, context: string): Error {
-  if (isNormalizedRpcError(reason)) return reason;
+function normalizeRpcError(reason: unknown, context: string): ReaderRpcError {
+  if (isReaderRpcError(reason)) return reason;
 
-  const err = new Error(`${context}: ${describeRpcRejection(reason)}`) as Error & {
-    cause?: unknown;
-    code?: number;
-  };
+  const err = new Error(
+    `${context}: ${describeRpcRejection(reason)}`
+  ) as ReaderRpcError;
   err.cause = reason;
   const code = extractJsonRpcCode(reason);
   if (code !== undefined) err.code = code;
@@ -169,7 +175,11 @@ export interface IAssetData {
   has_ipfs: number;
   block_height?: number;
   blockhash?: string;
+  /** Transaction id encoded as asset data when has_ipfs is set. */
+  txid?: string;
   ipfs_hash?: string;
+  /** Present for restricted assets. */
+  verifier_string?: string;
   [key: string]: unknown;
 }
 
@@ -278,21 +288,27 @@ export function createReader(options: ReaderOptions = {}): Reader {
 
   let rpc = wrapRpc(getRPC(username, password, url));
 
-  function resetRPC() {
-    rpc = wrapRpc(getRPC(username, password, url));
-    return rpc;
+  /** Build first, then commit state so a rejected value cannot poison the
+   * instance while leaving the previous RPC client installed. */
+  function setConnection(
+    newURL: string,
+    newUsername: string,
+    newPassword: string
+  ): void {
+    const newRPC = wrapRpc(getRPC(newUsername, newPassword, newURL));
+    url = newURL;
+    username = newUsername;
+    password = newPassword;
+    rpc = newRPC;
   }
   function setURL(newURL: string) {
-    url = newURL;
-    resetRPC();
+    setConnection(newURL, username, password);
   }
   function setUsername(newUsername: string) {
-    username = newUsername;
-    resetRPC();
+    setConnection(url, newUsername, password);
   }
   function setPassword(newPassword: string) {
-    password = newPassword;
-    resetRPC();
+    setConnection(url, username, newPassword);
   }
   function setMainnet() {
     setURL(URL_MAINNET);

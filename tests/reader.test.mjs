@@ -7,7 +7,12 @@ import { test, afterEach } from "node:test";
 import assert from "node:assert/strict";
 import http from "node:http";
 
-import Reader, { createReader, URL_MAINNET } from "../dist/index.mjs";
+import Reader, {
+  createReader,
+  isReaderRpcError,
+  URL_MAINNET,
+  URL_TESTNET,
+} from "../dist/index.mjs";
 
 // --- local JSON-RPC server ---------------------------------------------------
 // handler(method, params) may return:
@@ -123,6 +128,8 @@ test("JSON-RPC error over 200 → Error with method, description, code, cause", 
   assert.match(err.message, /Block height out of range/);
   assert.equal(err.code, -8);
   assert.equal(err.cause?.error?.code, -8);
+  assert.equal(isReaderRpcError(err), true);
+  assert.equal(isReaderRpcError(new Error("ordinary")), false);
 });
 
 test("JSON-RPC error over HTTP 500 keeps code and status in cause", async () => {
@@ -197,6 +204,55 @@ test("setters of one instance do not affect another instance", async () => {
   );
 });
 
+test("an independent instance does not affect the singleton", async () => {
+  const singletonServer = await serverWith(() => ({ result: "33".repeat(32) }));
+  const instanceServer = await serverWith(() => ({ result: "44".repeat(32) }));
+  Reader.setURL(singletonServer.url);
+  const instance = createReader({ url: singletonServer.url });
+  instance.setURL(instanceServer.url);
+
+  assert.equal(await Reader.getBestBlockHash(), "33".repeat(32));
+  assert.equal(await instance.getBestBlockHash(), "44".repeat(32));
+});
+
+test("setMainnet and setTestnet select their named public URL", async () => {
+  const originalFetch = globalThis.fetch;
+  const requestedURLs = [];
+  globalThis.fetch = async (url) => {
+    requestedURLs.push(String(url));
+    return new Response(JSON.stringify({ result: "55".repeat(32) }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  };
+  try {
+    const instance = createReader({ url: "http://127.0.0.1:1/" });
+    instance.setTestnet();
+    await instance.getBestBlockHash();
+    instance.setMainnet();
+    await instance.getBestBlockHash();
+    assert.deepEqual(requestedURLs, [URL_TESTNET, URL_MAINNET]);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("failed setters are atomic and preserve the working connection", async () => {
+  const s = await serverWith(() => ({ result: "66".repeat(32) }));
+  const instance = createReader({ url: s.url, username: "user", password: "pass" });
+
+  assert.throws(() => instance.setURL(""), /Syntax error/);
+  assert.equal(await instance.getBestBlockHash(), "66".repeat(32));
+  assert.throws(() => instance.setUsername(""), /Syntax error/);
+  assert.equal(await instance.getBestBlockHash(), "66".repeat(32));
+  assert.throws(() => instance.setPassword(""), /Syntax error/);
+  assert.equal(await instance.getBestBlockHash(), "66".repeat(32));
+  assert.equal(
+    s.calls.at(-1).authorization,
+    "Basic " + Buffer.from("user:pass").toString("base64"),
+  );
+});
+
 test("singleton setters rebuild a normalized RPC and keep working", async () => {
   const s = await serverWith(() => ({ result: "cc".repeat(32) }));
   Reader.setURL(s.url);
@@ -241,6 +297,15 @@ test("getAddressTxids: includeAssets defaults to false and is honoured when true
   assert.deepEqual(s.calls.at(-1).params, [{ addresses: ["tADDR"] }, false]);
   await r.getAddressTxids("tADDR", true);
   assert.deepEqual(s.calls.at(-1).params, [{ addresses: ["tADDR"] }, true]);
+});
+
+test("getAddressesByAsset applies defaults, cap and numeric start", async () => {
+  const s = await serverWith(() => ({ result: {} }));
+  const r = createReader({ url: s.url });
+  await r.getAddressesByAsset("BUTTER");
+  assert.deepEqual(s.calls.at(-1).params, ["BUTTER", false, 5000, 0]);
+  await r.getAddressesByAsset("BUTTER", true, 90000, 12);
+  assert.deepEqual(s.calls.at(-1).params, ["BUTTER", true, 50000, 12]);
 });
 
 // --- §3.2.11-13 mempool helpers and formatting -------------------------------
