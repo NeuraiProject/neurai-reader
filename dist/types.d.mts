@@ -145,5 +145,3 @@ declare const _default: {
     verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
 };
 export default _default;
-
-//# sourceMappingURL=types.d.ts.map
