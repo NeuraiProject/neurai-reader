@@ -1,7 +1,16 @@
 import {getRPC as $d7Elf$getRPC, methods as $d7Elf$methods} from "@neuraiproject/neurai-rpc";
 
 
-const $6963de71636421d7$var$ONE_FULL_COIN = 1e8;
+const $6963de71636421d7$var$ONE_FULL_COIN = 100000000n;
+function $6963de71636421d7$var$rawInteger(value) {
+    if (typeof value === "bigint") return value;
+    if (typeof value === "number" && Number.isSafeInteger(value)) return BigInt(value);
+    if (typeof value === "string" && /^-?[0-9]+$/.test(value)) return BigInt(value);
+    throw new TypeError("Amount must be a safe integer, bigint or integer string");
+}
+function $6963de71636421d7$var$compatibleInteger(value) {
+    return value >= BigInt(Number.MIN_SAFE_INTEGER) && value <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(value) : value.toString();
+}
 const $6963de71636421d7$export$7704e714695cc7a8 = "https://rpc-main.neurai.org/rpc";
 const $6963de71636421d7$export$b6d3241152c7efb = "https://rpc-testnet.neurai.org/rpc";
 const $6963de71636421d7$var$NORMALIZED_BRAND = Symbol.for("neurai.reader.normalizedRpcError");
@@ -182,10 +191,11 @@ function $6963de71636421d7$export$3687857846e34983(options = {}) {
    * entries (spends are negative, so the result is the net change).
    */ function getAssetBalanceFromMempool(assetName, mempool) {
         if (!Array.isArray(mempool) || mempool.length === 0) return 0;
-        return mempool.reduce((pending, item)=>{
-            if (item && item.assetName === assetName) return pending + Number(item.satoshis || 0);
+        const total = mempool.reduce((pending, item)=>{
+            if (item && item.assetName === assetName) return pending + $6963de71636421d7$var$rawInteger(item.satoshis);
             return pending;
-        }, 0);
+        }, 0n);
+        return $6963de71636421d7$var$compatibleInteger(total);
     }
     function getBestBlockHash() {
         return rpc((0, $d7Elf$methods).getbestblockhash, []);
@@ -260,8 +270,11 @@ function $6963de71636421d7$export$3687857846e34983(options = {}) {
         ]);
     }
     /** Format a satoshi amount as a display string with 8 decimals. */ function formatBalance(satoshis) {
-        if (!satoshis) return "0";
-        return (satoshis / $6963de71636421d7$var$ONE_FULL_COIN).toFixed(8);
+        if (satoshis === undefined || satoshis === null) return "0";
+        const raw = $6963de71636421d7$var$rawInteger(satoshis);
+        if (raw === 0n) return "0";
+        const absolute = raw < 0n ? -raw : raw;
+        return `${raw < 0n ? "-" : ""}${absolute / $6963de71636421d7$var$ONE_FULL_COIN}.${(absolute % $6963de71636421d7$var$ONE_FULL_COIN).toString().padStart(8, "0")}`;
     }
     function verifyMessage(address, signature, message) {
         const params = [

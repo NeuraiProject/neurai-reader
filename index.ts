@@ -1,6 +1,23 @@
 import { getRPC, methods } from "@neuraiproject/neurai-rpc";
 
-const ONE_FULL_COIN = 1e8;
+/** Exact RPC quantities: unsafe JSON numbers are preserved as decimal text. */
+export type RpcAmount = number | string;
+/** Raw integer units accepted by local amount helpers. */
+export type RawAmount = RpcAmount | bigint;
+
+const ONE_FULL_COIN = 100000000n;
+
+function rawInteger(value: RawAmount): bigint {
+  if (typeof value === "bigint") return value;
+  if (typeof value === "number" && Number.isSafeInteger(value)) return BigInt(value);
+  if (typeof value === "string" && /^-?[0-9]+$/.test(value)) return BigInt(value);
+  throw new TypeError("Amount must be a safe integer, bigint or integer string");
+}
+
+function compatibleInteger(value: bigint): RpcAmount {
+  return value >= BigInt(Number.MIN_SAFE_INTEGER) && value <= BigInt(Number.MAX_SAFE_INTEGER)
+    ? Number(value) : value.toString();
+}
 
 export const URL_MAINNET = "https://rpc-main.neurai.org/rpc";
 export const URL_TESTNET = "https://rpc-testnet.neurai.org/rpc";
@@ -123,15 +140,15 @@ function wrapRpc(rpc: RpcClient): RpcClient {
 
 /** getaddressbalance without assets: satoshi totals for the address set. */
 export interface IAddressBalance {
-  balance: number;
-  received: number;
+  balance: RpcAmount;
+  received: RpcAmount;
 }
 
 /** getaddressbalance with includeAssets: one entry per asset (XNA included). */
 export interface IAssetBalanceEntry {
   assetName: string;
-  balance: number;
-  received: number;
+  balance: RpcAmount;
+  received: RpcAmount;
 }
 
 export interface IUTXO {
@@ -139,7 +156,7 @@ export interface IUTXO {
   txid: string;
   outputIndex: number;
   script: string;
-  satoshis: number;
+  satoshis: RawAmount;
   height: number;
   /** "XNA" for plain outputs, the asset name otherwise (observed on the
    *  DePIN-Test node; kept optional for older nodes). */
@@ -151,14 +168,14 @@ export interface IMempoolEntry {
   assetName?: string;
   txid: string;
   index: number;
-  satoshis: number;
+  satoshis: RawAmount;
   timestamp: number;
   prevtxid?: string;
   prevout?: number;
 }
 
 export interface IAddressDelta {
-  satoshis: number;
+  satoshis: RawAmount;
   txid: string;
   index: number;
   blockindex: number;
@@ -169,7 +186,7 @@ export interface IAddressDelta {
 
 export interface IAssetData {
   name: string;
-  amount: number;
+  amount: RpcAmount;
   units: number;
   reissuable: number;
   has_ipfs: number;
@@ -199,7 +216,7 @@ export interface IBlockchainInfo {
 export interface IPubKeyInfo {
   address: string;
   pubkey: string;
-  revealed: number;
+  revealed: boolean | 0 | 1;
   height: number;
   txid: string;
 }
@@ -246,7 +263,7 @@ export interface Reader {
   getAssetBalanceFromMempool(
     assetName: string,
     mempool: IMempoolEntry[]
-  ): number;
+  ): RpcAmount;
   getBestBlockHash(): Promise<string>;
   getBlockByHash(hash: string, verbosity?: number): Promise<any>;
   getBlockByHeight(height: number, verbosity?: number): Promise<any>;
@@ -258,10 +275,10 @@ export interface Reader {
   getPendingBalanceFromAddressMempool(
     address: string | string[],
     assetName?: string
-  ): Promise<number>;
+  ): Promise<RpcAmount>;
   getPubKey(address: string): Promise<IPubKeyInfo>;
   getTransaction(id: string): Promise<any>;
-  formatBalance(satoshis: number): string;
+  formatBalance(satoshis?: RawAmount | null): string;
   verifyMessage(
     address: string,
     signature: string,
@@ -418,16 +435,17 @@ export function createReader(options: ReaderOptions = {}): Reader {
   function getAssetBalanceFromMempool(
     assetName: string,
     mempool: IMempoolEntry[]
-  ): number {
+  ): RpcAmount {
     if (!Array.isArray(mempool) || mempool.length === 0) {
       return 0;
     }
-    return mempool.reduce((pending, item) => {
+    const total = mempool.reduce((pending, item) => {
       if (item && item.assetName === assetName) {
-        return pending + Number(item.satoshis || 0);
+        return pending + rawInteger(item.satoshis);
       }
       return pending;
-    }, 0);
+    }, 0n);
+    return compatibleInteger(total);
   }
 
   function getBestBlockHash(): Promise<string> {
@@ -477,7 +495,7 @@ export function createReader(options: ReaderOptions = {}): Reader {
   async function getPendingBalanceFromAddressMempool(
     address: string | string[],
     assetName: string = "XNA"
-  ): Promise<number> {
+  ): Promise<RpcAmount> {
     const mempool = await getAddressMempool(address);
     return getAssetBalanceFromMempool(assetName, mempool);
   }
@@ -501,9 +519,12 @@ export function createReader(options: ReaderOptions = {}): Reader {
   }
 
   /** Format a satoshi amount as a display string with 8 decimals. */
-  function formatBalance(satoshis: number): string {
-    if (!satoshis) return "0";
-    return (satoshis / ONE_FULL_COIN).toFixed(8);
+  function formatBalance(satoshis?: RawAmount | null): string {
+    if (satoshis === undefined || satoshis === null) return "0";
+    const raw = rawInteger(satoshis);
+    if (raw === 0n) return "0";
+    const absolute = raw < 0n ? -raw : raw;
+    return `${raw < 0n ? "-" : ""}${absolute / ONE_FULL_COIN}.${(absolute % ONE_FULL_COIN).toString().padStart(8, "0")}`;
   }
 
   function verifyMessage(

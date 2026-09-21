@@ -1,6 +1,6 @@
 {
   "name": "@neuraiproject/neurai-reader",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Read information from Neurai blockchain",
   "source": "index.ts",
   "main": "./dist/index.cjs",
@@ -39,7 +39,7 @@
   "author": "Neuraiproject",
   "license": "MIT",
   "dependencies": {
-    "@neuraiproject/neurai-rpc": "^0.6.0"
+    "@neuraiproject/neurai-rpc": "^0.6.1"
   },
   "bugs": {
     "url": "https://github.com/neuraiproject/neurai-reader/issues"

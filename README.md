@@ -104,7 +104,7 @@ For exact signatures and result types, see the generated declarations
 
 | Method | Notes |
 |---|---|
-| `formatBalance(satoshis)` | `"1.50000000"` for `150000000`; `"0"` for falsy (new in 0.1.0). |
+| `formatBalance(satoshis)` | `"1.50000000"` for `150000000`; `"0"` for zero, null or undefined (new in 0.1.0). |
 | `setURL` / `setUsername` / `setPassword` | Reconfigure the instance (or the singleton). |
 | `setMainnet()` / `setTestnet()` | Shortcuts to the public URLs (new in 0.1.0). |
 | `createReader(options?)` | Independent instance (new in 0.1.0). |
@@ -176,3 +176,25 @@ Also note the fork resolved JSON-RPC errors by throwing `Error(message)`;
 ## License
 
 MIT
+
+## Exact amounts (0.1.1)
+
+Reader requires neurai-rpc >= 0.6.1. RPC amounts retain their exact digits:
+small values remain numbers; unsafe integers or decimal amounts are returned
+as strings. Do not convert these strings to `Number` before doing arithmetic.
+The exported `RpcAmount` type is `number | string`.
+
+Local helpers accept raw integer units as safe numbers, integer strings or
+bigint (`RawAmount`). Mempool sums use bigint internally and return a number
+when safe, otherwise an integer string. Negative pending deltas are supported.
+`formatBalance` uses exactly eight decimal places, except zero returns `"0"`.
+
+```js
+Reader.formatBalance("9007199254740993"); // "90071992.54740993"
+Reader.formatBalance(-1n);               // "-0.00000001"
+```
+
+Unsafe numeric inputs, fractional raw units and malformed integer strings now
+throw `TypeError` instead of silently rounding. Pass the original integer text
+or bigint; digits already lost in a JavaScript number cannot be recovered.
+`formatBalance(null)` and `formatBalance(undefined)` retain the legacy `"0"`.

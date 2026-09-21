@@ -51,7 +51,7 @@ try {
     "--json",
   ]);
   const packResult = JSON.parse(packOutput);
-  const tarball = join(tarballDirectory, packResult[0].filename);
+  const tarball = join(tarballDirectory, (Array.isArray(packResult) ? packResult[0] : Object.values(packResult)[0]).filename);
 
   writeFileSync(
     join(consumerDirectory, "package.json"),
@@ -94,6 +94,8 @@ if (typeof isReaderRpcError !== "function") process.exit(1);
     `import Reader, { createReader, isReaderRpcError, type Reader as ReaderType, type IAssetData } from "@neuraiproject/neurai-reader";
 const instance: ReaderType = createReader();
 const asset: Promise<IAssetData | null> = instance.getAsset("BUTTER");
+const formatted: string = Reader.formatBalance(9007199254740993n);
+const pending: number | string = Reader.getAssetBalanceFromMempool("XNA", []);
 Reader.getBestBlockHash();
 try { await asset; } catch (error) { if (isReaderRpcError(error)) error.code; }
 `,
@@ -105,6 +107,8 @@ import type { Reader, IUTXO } from "@neuraiproject/neurai-reader";
 const instance: Reader = pkg.createReader();
 const utxos: Promise<IUTXO[]> = instance.getAddressUTXOs("tAddress");
 pkg.default.getBestBlockHash();
+const formatted: string = pkg.default.formatBalance("9007199254740993");
+const pending: Promise<number | string> = instance.getPendingBalanceFromAddressMempool("tAddress");
 void utxos;
 `,
   );

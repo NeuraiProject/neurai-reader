@@ -1,3 +1,7 @@
+/** Exact RPC quantities: unsafe JSON numbers are preserved as decimal text. */
+export type RpcAmount = number | string;
+/** Raw integer units accepted by local amount helpers. */
+export type RawAmount = RpcAmount | bigint;
 export const URL_MAINNET = "https://rpc-main.neurai.org/rpc";
 export const URL_TESTNET = "https://rpc-testnet.neurai.org/rpc";
 /** Normalized failure returned by every RPC-backed Reader method. */
@@ -9,21 +13,21 @@ export interface ReaderRpcError extends Error {
 export function isReaderRpcError(value: unknown): value is ReaderRpcError;
 /** getaddressbalance without assets: satoshi totals for the address set. */
 export interface IAddressBalance {
-    balance: number;
-    received: number;
+    balance: RpcAmount;
+    received: RpcAmount;
 }
 /** getaddressbalance with includeAssets: one entry per asset (XNA included). */
 export interface IAssetBalanceEntry {
     assetName: string;
-    balance: number;
-    received: number;
+    balance: RpcAmount;
+    received: RpcAmount;
 }
 export interface IUTXO {
     address: string;
     txid: string;
     outputIndex: number;
     script: string;
-    satoshis: number;
+    satoshis: RawAmount;
     height: number;
     /** "XNA" for plain outputs, the asset name otherwise (observed on the
      *  DePIN-Test node; kept optional for older nodes). */
@@ -34,13 +38,13 @@ export interface IMempoolEntry {
     assetName?: string;
     txid: string;
     index: number;
-    satoshis: number;
+    satoshis: RawAmount;
     timestamp: number;
     prevtxid?: string;
     prevout?: number;
 }
 export interface IAddressDelta {
-    satoshis: number;
+    satoshis: RawAmount;
     txid: string;
     index: number;
     blockindex: number;
@@ -50,7 +54,7 @@ export interface IAddressDelta {
 }
 export interface IAssetData {
     name: string;
-    amount: number;
+    amount: RpcAmount;
     units: number;
     reissuable: number;
     has_ipfs: number;
@@ -78,7 +82,7 @@ export interface IBlockchainInfo {
 export interface IPubKeyInfo {
     address: string;
     pubkey: string;
-    revealed: number;
+    revealed: boolean | 0 | 1;
     height: number;
     txid: string;
 }
@@ -105,17 +109,17 @@ export interface Reader {
     /** Resolves `null` for an unknown asset — the node does not error. */
     getAsset(name: string): Promise<IAssetData | null>;
     getAssetBalance(address: string | string[]): Promise<IAssetBalanceEntry[]>;
-    getAssetBalanceFromMempool(assetName: string, mempool: IMempoolEntry[]): number;
+    getAssetBalanceFromMempool(assetName: string, mempool: IMempoolEntry[]): RpcAmount;
     getBestBlockHash(): Promise<string>;
     getBlockByHash(hash: string, verbosity?: number): Promise<any>;
     getBlockByHeight(height: number, verbosity?: number): Promise<any>;
     getBlockchainInfo(): Promise<IBlockchainInfo>;
     getMempool(): Promise<any>;
     getNeuraiBalance(address: string | string[]): Promise<IAddressBalance | Record<string, never>>;
-    getPendingBalanceFromAddressMempool(address: string | string[], assetName?: string): Promise<number>;
+    getPendingBalanceFromAddressMempool(address: string | string[], assetName?: string): Promise<RpcAmount>;
     getPubKey(address: string): Promise<IPubKeyInfo>;
     getTransaction(id: string): Promise<any>;
-    formatBalance(satoshis: number): string;
+    formatBalance(satoshis?: RawAmount | null): string;
     verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
 }
 /**
@@ -142,17 +146,17 @@ declare const _default: {
     /** Resolves `null` for an unknown asset — the node does not error. */
     getAsset(name: string): Promise<IAssetData | null>;
     getAssetBalance(address: string | string[]): Promise<IAssetBalanceEntry[]>;
-    getAssetBalanceFromMempool(assetName: string, mempool: IMempoolEntry[]): number;
+    getAssetBalanceFromMempool(assetName: string, mempool: IMempoolEntry[]): RpcAmount;
     getBestBlockHash(): Promise<string>;
     getBlockByHash(hash: string, verbosity?: number): Promise<any>;
     getBlockByHeight(height: number, verbosity?: number): Promise<any>;
     getBlockchainInfo(): Promise<IBlockchainInfo>;
     getMempool(): Promise<any>;
     getNeuraiBalance(address: string | string[]): Promise<IAddressBalance | Record<string, never>>;
-    getPendingBalanceFromAddressMempool(address: string | string[], assetName?: string): Promise<number>;
+    getPendingBalanceFromAddressMempool(address: string | string[], assetName?: string): Promise<RpcAmount>;
     getPubKey(address: string): Promise<IPubKeyInfo>;
     getTransaction(id: string): Promise<any>;
-    formatBalance(satoshis: number): string;
+    formatBalance(satoshis?: RawAmount | null): string;
     verifyMessage(address: string, signature: string, message: string): Promise<boolean>;
 };
 export default _default;

@@ -409,3 +409,51 @@ test("getBlockByHeight: default verbosity 3, custom value, and both failure legs
   assert.match(err2.message, /getblock/);
   assert.equal(err2.code, -5);
 });
+
+// Literal JSON is essential: JSON.stringify of an unsafe number would already
+// have discarded the digits before the transport sees the response.
+test("RPC 0.6.1 preserves large raw and display amounts through Reader", async () => {
+  const responses = {
+    getaddressbalance: '{"balance":9007199254740993,"received":10000000000000001}',
+    getaddressutxos: '[{"satoshis":9007199254740993}]',
+    getaddressdeltas: '[{"satoshis":-9007199254740993}]',
+    getassetdata: '{"name":"BIG","amount":100000000.00000001,"units":8}',
+    getaddressmempool: '[{"assetName":"XNA","satoshis":9007199254740993},{"assetName":"XNA","satoshis":-9007199254740992},{"assetName":"BIG","satoshis":10000000000000001}]',
+  };
+  const s = await serverWith(method => ({ raw: {
+    status: 200, contentType: "application/json", body: `{"result":${responses[method]}}`,
+  } }));
+  const r = createReader({ url: s.url });
+  assert.deepEqual(await r.getNeuraiBalance("tADDR"), { balance: "9007199254740993", received: "10000000000000001" });
+  assert.equal((await r.getAddressUTXOs("tADDR"))[0].satoshis, "9007199254740993");
+  assert.equal((await r.getAddressDeltas("tADDR"))[0].satoshis, "-9007199254740993");
+  assert.equal((await r.getAsset("BIG")).amount, "100000000.00000001");
+  assert.equal(await r.getPendingBalanceFromAddressMempool("tADDR"), 1);
+  assert.equal(await r.getPendingBalanceFromAddressMempool("tADDR", "BIG"), "10000000000000001");
+});
+
+test("mempool sums remain exact across unsafe intermediate totals and cancellation", () => {
+  const entries = [Number.MAX_SAFE_INTEGER, 2, -Number.MAX_SAFE_INTEGER].map(satoshis => ({ assetName: "XNA", satoshis }));
+  assert.equal(Reader.getAssetBalanceFromMempool("XNA", entries), 2);
+  assert.equal(Reader.getAssetBalanceFromMempool("BIG", [
+    { assetName: "BIG", satoshis: -9007199254740993n },
+    { assetName: "XNA", satoshis: 100 },
+  ]), "-9007199254740993");
+});
+
+test("formatBalance keeps every raw unit, including negative deltas", () => {
+  for (const [raw, expected] of [
+    ["9007199254740993", "90071992.54740993"],
+    [10000000000000001n, "100000000.00000001"],
+    [-1n, "-0.00000001"],
+    ["-9007199254740993", "-90071992.54740993"],
+    ["0", "0"], [0n, "0"],
+  ]) assert.equal(Reader.formatBalance(raw), expected);
+});
+
+test("amount helpers reject values that are rounded or malformed", () => {
+  for (const amount of [9007199254740992, NaN, Infinity, 1.5, "1.5", "", "oops", true]) {
+    assert.throws(() => Reader.formatBalance(amount), TypeError);
+    assert.throws(() => Reader.getAssetBalanceFromMempool("XNA", [{ assetName: "XNA", satoshis: amount }]), TypeError);
+  }
+});

@@ -17,7 +17,16 @@ $parcel$export(module.exports, "isReaderRpcError", () => $ac621667b126050d$expor
 $parcel$export(module.exports, "createReader", () => $ac621667b126050d$export$3687857846e34983);
 $parcel$export(module.exports, "default", () => $ac621667b126050d$export$2e2bcd8739ae039);
 
-const $ac621667b126050d$var$ONE_FULL_COIN = 1e8;
+const $ac621667b126050d$var$ONE_FULL_COIN = 100000000n;
+function $ac621667b126050d$var$rawInteger(value) {
+    if (typeof value === "bigint") return value;
+    if (typeof value === "number" && Number.isSafeInteger(value)) return BigInt(value);
+    if (typeof value === "string" && /^-?[0-9]+$/.test(value)) return BigInt(value);
+    throw new TypeError("Amount must be a safe integer, bigint or integer string");
+}
+function $ac621667b126050d$var$compatibleInteger(value) {
+    return value >= BigInt(Number.MIN_SAFE_INTEGER) && value <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(value) : value.toString();
+}
 const $ac621667b126050d$export$7704e714695cc7a8 = "https://rpc-main.neurai.org/rpc";
 const $ac621667b126050d$export$b6d3241152c7efb = "https://rpc-testnet.neurai.org/rpc";
 const $ac621667b126050d$var$NORMALIZED_BRAND = Symbol.for("neurai.reader.normalizedRpcError");
@@ -198,10 +207,11 @@ function $ac621667b126050d$export$3687857846e34983(options = {}) {
    * entries (spends are negative, so the result is the net change).
    */ function getAssetBalanceFromMempool(assetName, mempool) {
         if (!Array.isArray(mempool) || mempool.length === 0) return 0;
-        return mempool.reduce((pending, item)=>{
-            if (item && item.assetName === assetName) return pending + Number(item.satoshis || 0);
+        const total = mempool.reduce((pending, item)=>{
+            if (item && item.assetName === assetName) return pending + $ac621667b126050d$var$rawInteger(item.satoshis);
             return pending;
-        }, 0);
+        }, 0n);
+        return $ac621667b126050d$var$compatibleInteger(total);
     }
     function getBestBlockHash() {
         return rpc((0, $5ALsb$neuraiprojectneurairpc.methods).getbestblockhash, []);
@@ -276,8 +286,11 @@ function $ac621667b126050d$export$3687857846e34983(options = {}) {
         ]);
     }
     /** Format a satoshi amount as a display string with 8 decimals. */ function formatBalance(satoshis) {
-        if (!satoshis) return "0";
-        return (satoshis / $ac621667b126050d$var$ONE_FULL_COIN).toFixed(8);
+        if (satoshis === undefined || satoshis === null) return "0";
+        const raw = $ac621667b126050d$var$rawInteger(satoshis);
+        if (raw === 0n) return "0";
+        const absolute = raw < 0n ? -raw : raw;
+        return `${raw < 0n ? "-" : ""}${absolute / $ac621667b126050d$var$ONE_FULL_COIN}.${(absolute % $ac621667b126050d$var$ONE_FULL_COIN).toString().padStart(8, "0")}`;
     }
     function verifyMessage(address, signature, message) {
         const params = [
