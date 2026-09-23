@@ -89,8 +89,27 @@ For exact signatures and result types, see the generated declarations
 | `getAddressMempool(address \| address[])` | Unconfirmed entries (assets included; spends have negative `satoshis`). |
 | `getPendingBalanceFromAddressMempool(address, assetName = "XNA")` | Net unconfirmed change for one asset, in satoshis (new in 0.1.0). |
 | `getAssetBalanceFromMempool(assetName, mempool)` | Pure helper behind the previous method (new in 0.1.0). |
-| `getPubKey(address)` | `{ address, pubkey, revealed, height, txid }`. Requires a node with `-pubkeyindex=1`. |
-| `verifyMessage(address, signature, message)` | Node-side signature verification. |
+| `getPubKey(address)` | `{ address, pubkey, revealed, height, txid }`. Requires a node with `-pubkeyindex=1`. For witness addresses see [Address types](#address-types-neurai-key-5). |
+| `verifyMessage(address, signature, message)` | Node-side signature verification. For witness addresses see [Address types](#address-types-neurai-key-5). |
+
+#### Address types (neurai-key 5)
+
+Reader passes addresses to the node untouched and never parses them, so every
+address type the node knows works with the address-index methods above:
+Legacy Base58 P2PKH (`N…`/`t…`), generic AuthScript witness v1
+(`nc1p…`/`tnc1p…`), post-quantum witness v2 (`pq1z…`/`tpq1z…`) and ECDSA
+witness v3 (`nq1r…`/`tnq1r…`). What `getPubKey` and `verifyMessage` accept is
+decided by the node, not by this library:
+
+- `getPubKey`: the node indexes revealed keys for Legacy P2PKH and AuthScript
+  v1 addresses. Strict v2 (`pq1z…`) and v3 (`nq1r…`) addresses are rejected
+  with `RPC getpubkey failed: Address does not refer to a key (code -5)`.
+- `verifyMessage`: a node with the neurai-key 5 address types verifies Legacy
+  P2PKH, AuthScript v1 (PQ key), v2 (PQ) and v3 (ECDSA) signatures. v2/v3
+  signatures are bound to the address, so a signature made for one address
+  never verifies for another address of the same key. Nodes that predate
+  these address types may reject them as invalid addresses, and the
+  pre-neurai-key-5 `nq1p…`/`tnq1p…` form is invalid on current nodes.
 
 ### Assets
 
