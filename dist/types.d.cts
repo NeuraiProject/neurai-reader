@@ -4,6 +4,7 @@ export type RpcAmount = number | string;
 export type RawAmount = RpcAmount | bigint;
 export const URL_MAINNET = "https://rpc-main.neurai.org/rpc";
 export const URL_TESTNET = "https://rpc-testnet.neurai.org/rpc";
+export const TESTNET_GENESIS_HASH = "0000008b384aeffecdab182575dc4e86c9f07f90318c65088532660ed9a8a021";
 /** Normalized failure returned by every RPC-backed Reader method. */
 export interface ReaderRpcError extends Error {
     cause: unknown;
@@ -93,8 +94,12 @@ export interface ReaderOptions {
     username?: string;
     /** Basic-auth password. Default: "anonymous". */
     password?: string;
+    /** Require this genesis before any RPC request; defaults to the reset testnet genesis for URL_TESTNET. */
+    expectedGenesisHash?: string;
 }
 export interface Reader {
+    /** Check the connected node's genesis before using its chain data. */
+    assertGenesis(expectedGenesisHash?: string): Promise<void>;
     setURL(newURL: string): void;
     setUsername(newUsername: string): void;
     setPassword(newPassword: string): void;
@@ -132,6 +137,9 @@ declare const _default: {
     createReader: typeof createReader;
     URL_MAINNET: string;
     URL_TESTNET: string;
+    TESTNET_GENESIS_HASH: string;
+    /** Check the connected node's genesis before using its chain data. */
+    assertGenesis(expectedGenesisHash?: string): Promise<void>;
     setURL(newURL: string): void;
     setUsername(newUsername: string): void;
     setPassword(newPassword: string): void;

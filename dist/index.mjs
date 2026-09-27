@@ -13,6 +13,7 @@ function $6963de71636421d7$var$compatibleInteger(value) {
 }
 const $6963de71636421d7$export$7704e714695cc7a8 = "https://rpc-main.neurai.org/rpc";
 const $6963de71636421d7$export$b6d3241152c7efb = "https://rpc-testnet.neurai.org/rpc";
+const $6963de71636421d7$export$33934374c1444cf = "0000008b384aeffecdab182575dc4e86c9f07f90318c65088532660ed9a8a021";
 const $6963de71636421d7$var$NORMALIZED_BRAND = Symbol.for("neurai.reader.normalizedRpcError");
 function $6963de71636421d7$export$c259d14e3ba8e12d(value) {
     return value instanceof Error && value[$6963de71636421d7$var$NORMALIZED_BRAND] === true;
@@ -77,14 +78,36 @@ function $6963de71636421d7$export$3687857846e34983(options = {}) {
     let url = options.url ?? $6963de71636421d7$export$7704e714695cc7a8;
     let username = options.username ?? "anonymous";
     let password = options.password ?? "anonymous";
-    let rpc = $6963de71636421d7$var$wrapRpc((0, $d7Elf$getRPC)(username, password, url));
+    let expectedGenesisHash = options.expectedGenesisHash ?? (url === $6963de71636421d7$export$b6d3241152c7efb ? $6963de71636421d7$export$33934374c1444cf : undefined);
+    let rawRpc = $6963de71636421d7$var$wrapRpc((0, $d7Elf$getRPC)(username, password, url));
+    let genesisCheck;
+    async function assertGenesis(expectedHash = expectedGenesisHash) {
+        if (!expectedHash || !/^[0-9a-fA-F]{64}$/.test(expectedHash)) throw new Error("A 64-character expected genesis hash is required");
+        const actual = await rawRpc((0, $d7Elf$methods).getblockhash, [
+            0
+        ]);
+        if (typeof actual !== "string" || actual.toLowerCase() !== expectedHash.toLowerCase()) throw new Error(`Unexpected genesis block: expected ${expectedHash}, received ${String(actual)}`);
+    }
+    const rpc = async (method, params)=>{
+        if (expectedGenesisHash) {
+            genesisCheck ??= assertGenesis().catch((error)=>{
+                genesisCheck = undefined;
+                throw error;
+            });
+            await genesisCheck;
+        }
+        return rawRpc(method, params);
+    };
     /** Build first, then commit state so a rejected value cannot poison the
    * instance while leaving the previous RPC client installed. */ function setConnection(newURL, newUsername, newPassword) {
         const newRPC = $6963de71636421d7$var$wrapRpc((0, $d7Elf$getRPC)(newUsername, newPassword, newURL));
+        const nextExpectedGenesisHash = newURL === url ? expectedGenesisHash : newURL === $6963de71636421d7$export$b6d3241152c7efb ? $6963de71636421d7$export$33934374c1444cf : undefined;
         url = newURL;
         username = newUsername;
         password = newPassword;
-        rpc = newRPC;
+        rawRpc = newRPC;
+        expectedGenesisHash = nextExpectedGenesisHash;
+        genesisCheck = undefined;
     }
     function setURL(newURL) {
         setConnection(newURL, username, password);
@@ -285,6 +308,7 @@ function $6963de71636421d7$export$3687857846e34983(options = {}) {
         return rpc((0, $d7Elf$methods).verifymessage, params);
     }
     return {
+        assertGenesis: assertGenesis,
         setURL: setURL,
         setUsername: setUsername,
         setPassword: setPassword,
@@ -320,9 +344,10 @@ var $6963de71636421d7$export$2e2bcd8739ae039 = {
     ...$6963de71636421d7$var$defaultReader,
     createReader: $6963de71636421d7$export$3687857846e34983,
     URL_MAINNET: $6963de71636421d7$export$7704e714695cc7a8,
-    URL_TESTNET: $6963de71636421d7$export$b6d3241152c7efb
+    URL_TESTNET: $6963de71636421d7$export$b6d3241152c7efb,
+    TESTNET_GENESIS_HASH: $6963de71636421d7$export$33934374c1444cf
 };
 
 
-export {$6963de71636421d7$export$7704e714695cc7a8 as URL_MAINNET, $6963de71636421d7$export$b6d3241152c7efb as URL_TESTNET, $6963de71636421d7$export$c259d14e3ba8e12d as isReaderRpcError, $6963de71636421d7$export$3687857846e34983 as createReader, $6963de71636421d7$export$2e2bcd8739ae039 as default};
+export {$6963de71636421d7$export$7704e714695cc7a8 as URL_MAINNET, $6963de71636421d7$export$b6d3241152c7efb as URL_TESTNET, $6963de71636421d7$export$33934374c1444cf as TESTNET_GENESIS_HASH, $6963de71636421d7$export$c259d14e3ba8e12d as isReaderRpcError, $6963de71636421d7$export$3687857846e34983 as createReader, $6963de71636421d7$export$2e2bcd8739ae039 as default};
 //# sourceMappingURL=index.mjs.map

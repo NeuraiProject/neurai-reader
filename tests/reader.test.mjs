@@ -12,6 +12,7 @@ import Reader, {
   isReaderRpcError,
   URL_MAINNET,
   URL_TESTNET,
+  TESTNET_GENESIS_HASH,
 } from "../dist/index.mjs";
 
 // --- local JSON-RPC server ---------------------------------------------------
@@ -218,9 +219,10 @@ test("an independent instance does not affect the singleton", async () => {
 test("setMainnet and setTestnet select their named public URL", async () => {
   const originalFetch = globalThis.fetch;
   const requestedURLs = [];
-  globalThis.fetch = async (url) => {
+  globalThis.fetch = async (url, options) => {
     requestedURLs.push(String(url));
-    return new Response(JSON.stringify({ result: "55".repeat(32) }), {
+    const method = JSON.parse(options.body).method;
+    return new Response(JSON.stringify({ result: method === "getblockhash" ? TESTNET_GENESIS_HASH : "55".repeat(32) }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
@@ -231,10 +233,20 @@ test("setMainnet and setTestnet select their named public URL", async () => {
     await instance.getBestBlockHash();
     instance.setMainnet();
     await instance.getBestBlockHash();
-    assert.deepEqual(requestedURLs, [URL_TESTNET, URL_MAINNET]);
+    assert.deepEqual(requestedURLs, [URL_TESTNET, URL_TESTNET, URL_MAINNET]);
   } finally {
     globalThis.fetch = originalFetch;
   }
+});
+
+test("testnet reader rejects the previous genesis before reading chain data", async () => {
+  const oldGenesis = "1".repeat(64);
+  const s = await serverWith((method) =>
+    method === "getblockhash" ? { result: oldGenesis } : { result: "22".repeat(32) }
+  );
+  const reader = createReader({ url: s.url, expectedGenesisHash: TESTNET_GENESIS_HASH });
+  await assert.rejects(reader.getBestBlockHash(), /Unexpected genesis block/);
+  assert.deepEqual(s.calls.map((call) => call.method), ["getblockhash"]);
 });
 
 test("failed setters are atomic and preserve the working connection", async () => {
@@ -412,7 +424,7 @@ test("getBlockByHeight: default verbosity 3, custom value, and both failure legs
 
 // Literal JSON is essential: JSON.stringify of an unsafe number would already
 // have discarded the digits before the transport sees the response.
-test("RPC 0.6.1 preserves large raw and display amounts through Reader", async () => {
+test("RPC preserves large raw and display amounts through Reader", async () => {
   const responses = {
     getaddressbalance: '{"balance":9007199254740993,"received":10000000000000001}',
     getaddressutxos: '[{"satoshis":9007199254740993}]',

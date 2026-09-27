@@ -9,6 +9,17 @@ By default it talks to the public RPC services (`https://rpc-main.neurai.org/rpc
 for mainnet, `https://rpc-testnet.neurai.org/rpc` for testnet). Point it at any
 node you control with `setURL` / `createReader`.
 
+## Reset testnet chain identity
+
+The reset testnet genesis is
+`0000008b384aeffecdab182575dc4e86c9f07f90318c65088532660ed9a8a021`.
+`setTestnet()` and `createReader({ url: URL_TESTNET })` verify it with
+`getblockhash(0)` before the first chain query. For a custom testnet endpoint,
+pass `expectedGenesisHash: TESTNET_GENESIS_HASH` to `createReader`, or call
+`await reader.assertGenesis(TESTNET_GENESIS_HASH)` before reading. The reader
+does not store chain state; consumers must reset saved cursors, histories,
+balances and UTXO caches when the genesis changes.
+
 ## Install and use
 
 ```sh
@@ -198,7 +209,7 @@ MIT
 
 ## Exact amounts (0.1.1)
 
-Reader requires neurai-rpc >= 0.6.1. RPC amounts retain their exact digits:
+Reader now requires neurai-rpc >= 0.7.0. RPC amounts retain their exact digits:
 small values remain numbers; unsafe integers or decimal amounts are returned
 as strings. Do not convert these strings to `Number` before doing arithmetic.
 The exported `RpcAmount` type is `number | string`.

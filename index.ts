@@ -21,6 +21,7 @@ function compatibleInteger(value: bigint): RpcAmount {
 
 export const URL_MAINNET = "https://rpc-main.neurai.org/rpc";
 export const URL_TESTNET = "https://rpc-testnet.neurai.org/rpc";
+export const TESTNET_GENESIS_HASH = "0000008b384aeffecdab182575dc4e86c9f07f90318c65088532660ed9a8a021";
 
 // ---------------------------------------------------------------------------
 // RPC error normalisation
@@ -228,9 +229,13 @@ export interface ReaderOptions {
   username?: string;
   /** Basic-auth password. Default: "anonymous". */
   password?: string;
+  /** Require this genesis before any RPC request; defaults to the reset testnet genesis for URL_TESTNET. */
+  expectedGenesisHash?: string;
 }
 
 export interface Reader {
+  /** Check the connected node's genesis before using its chain data. */
+  assertGenesis(expectedGenesisHash?: string): Promise<void>;
   setURL(newURL: string): void;
   setUsername(newUsername: string): void;
   setPassword(newPassword: string): void;
@@ -303,7 +308,28 @@ export function createReader(options: ReaderOptions = {}): Reader {
   let username = options.username ?? "anonymous";
   let password = options.password ?? "anonymous";
 
-  let rpc = wrapRpc(getRPC(username, password, url));
+  let expectedGenesisHash = options.expectedGenesisHash ?? (url === URL_TESTNET ? TESTNET_GENESIS_HASH : undefined);
+  let rawRpc = wrapRpc(getRPC(username, password, url));
+  let genesisCheck: Promise<void> | undefined;
+  async function assertGenesis(expectedHash = expectedGenesisHash): Promise<void> {
+    if (!expectedHash || !/^[0-9a-fA-F]{64}$/.test(expectedHash)) {
+      throw new Error("A 64-character expected genesis hash is required");
+    }
+    const actual = await rawRpc(methods.getblockhash, [0]);
+    if (typeof actual !== "string" || actual.toLowerCase() !== expectedHash.toLowerCase()) {
+      throw new Error(`Unexpected genesis block: expected ${expectedHash}, received ${String(actual)}`);
+    }
+  }
+  const rpc: RpcClient = async (method, params) => {
+    if (expectedGenesisHash) {
+      genesisCheck ??= assertGenesis().catch((error) => {
+        genesisCheck = undefined;
+        throw error;
+      });
+      await genesisCheck;
+    }
+    return rawRpc(method, params);
+  };
 
   /** Build first, then commit state so a rejected value cannot poison the
    * instance while leaving the previous RPC client installed. */
@@ -313,10 +339,15 @@ export function createReader(options: ReaderOptions = {}): Reader {
     newPassword: string
   ): void {
     const newRPC = wrapRpc(getRPC(newUsername, newPassword, newURL));
+    const nextExpectedGenesisHash = newURL === url
+      ? expectedGenesisHash
+      : newURL === URL_TESTNET ? TESTNET_GENESIS_HASH : undefined;
     url = newURL;
     username = newUsername;
     password = newPassword;
-    rpc = newRPC;
+    rawRpc = newRPC;
+    expectedGenesisHash = nextExpectedGenesisHash;
+    genesisCheck = undefined;
   }
   function setURL(newURL: string) {
     setConnection(newURL, username, password);
@@ -537,6 +568,7 @@ export function createReader(options: ReaderOptions = {}): Reader {
   }
 
   return {
+    assertGenesis,
     setURL,
     setUsername,
     setPassword,
@@ -576,4 +608,5 @@ export default {
   createReader,
   URL_MAINNET,
   URL_TESTNET,
+  TESTNET_GENESIS_HASH,
 };
