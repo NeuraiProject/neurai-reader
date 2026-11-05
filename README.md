@@ -207,6 +207,16 @@ Also note the fork resolved JSON-RPC errors by throwing `Error(message)`;
 
 MIT
 
+## neurai-rpc 0.9 (0.2.2)
+
+Requires `@neuraiproject/neurai-rpc` `^0.9.1` (was `^0.7.0`). In 0.x a caret
+range does not cross minor versions, so `^0.7.0` installed neurai-rpc 0.7,
+whose exported `TESTNET_GENESIS_HASH` is the genesis of the previous testnet,
+next to the 0.9.1 that wallets install. The reader checks the genesis with its
+own `TESTNET_GENESIS_HASH`, and the RPC client and the methods it calls are the
+same in 0.9.1, so its behaviour does not change; an application now gets a
+single neurai-rpc.
+
 ## Exact amounts (0.1.1)
 
 Reader now requires neurai-rpc >= 0.7.0. RPC amounts retain their exact digits:
