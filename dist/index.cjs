@@ -30,7 +30,7 @@ function $ac621667b126050d$var$compatibleInteger(value) {
 }
 const $ac621667b126050d$export$7704e714695cc7a8 = "https://rpc-main.neurai.org/rpc";
 const $ac621667b126050d$export$b6d3241152c7efb = "https://rpc-testnet.neurai.org/rpc";
-const $ac621667b126050d$export$33934374c1444cf = "0000008b384aeffecdab182575dc4e86c9f07f90318c65088532660ed9a8a021";
+const $ac621667b126050d$export$33934374c1444cf = "000000c710413a4265a996d30c86043aedef6a563900f1bc43fea61d5b2dc77d";
 const $ac621667b126050d$var$NORMALIZED_BRAND = Symbol.for("neurai.reader.normalizedRpcError");
 function $ac621667b126050d$export$c259d14e3ba8e12d(value) {
     return value instanceof Error && value[$ac621667b126050d$var$NORMALIZED_BRAND] === true;

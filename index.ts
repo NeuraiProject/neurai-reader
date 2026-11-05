@@ -21,7 +21,7 @@ function compatibleInteger(value: bigint): RpcAmount {
 
 export const URL_MAINNET = "https://rpc-main.neurai.org/rpc";
 export const URL_TESTNET = "https://rpc-testnet.neurai.org/rpc";
-export const TESTNET_GENESIS_HASH = "0000008b384aeffecdab182575dc4e86c9f07f90318c65088532660ed9a8a021";
+export const TESTNET_GENESIS_HASH = "000000c710413a4265a996d30c86043aedef6a563900f1bc43fea61d5b2dc77d";
 
 // ---------------------------------------------------------------------------
 // RPC error normalisation

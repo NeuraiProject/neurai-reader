@@ -12,7 +12,7 @@ node you control with `setURL` / `createReader`.
 ## Reset testnet chain identity
 
 The reset testnet genesis is
-`0000008b384aeffecdab182575dc4e86c9f07f90318c65088532660ed9a8a021`.
+`000000c710413a4265a996d30c86043aedef6a563900f1bc43fea61d5b2dc77d`.
 `setTestnet()` and `createReader({ url: URL_TESTNET })` verify it with
 `getblockhash(0)` before the first chain query. For a custom testnet endpoint,
 pass `expectedGenesisHash: TESTNET_GENESIS_HASH` to `createReader`, or call
